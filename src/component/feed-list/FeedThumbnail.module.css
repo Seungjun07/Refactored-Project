@@ -1,0 +1,92 @@
+/* 전체 컨테이너 */
+.FeedThumbnail {
+  width: 100%;
+  margin-bottom: 53px;
+}
+
+/* 주제 박스 */
+.FeedThumbnail .title-section {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: white;
+  margin-block: 23px 12px;
+}
+
+
+.title-section > div {
+  display: flex;
+  align-items: center;
+}
+
+.title-section .title {
+  margin-left: 20px;
+  justify-content: start;
+  color: black;
+  font-size: 18px;
+  img {
+    margin-right: 5px;
+    object-fit: cover;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.title-section .more-icon {
+  flex: 1;
+  justify-content: end;
+  margin-right: 29px;
+  cursor: pointer;
+}
+
+.title-section .icon-box:hover {
+  cursor: pointer;
+  background-color: #f0f0f0;
+}
+
+/* 검색박스 */
+.search-section {
+  width: 100%;
+  display: flex;
+  margin-bottom: 20px;
+  /* margin-block: 20px; */
+  position: relative;
+  cursor: pointer;
+
+  .search-box {
+    margin: 0 auto;
+    width: 85%;
+    color: rgba(26, 128, 230, 0.65);
+    padding: 15px;
+    border-radius: 12px;
+    background-color: #f1f7ff;
+    border: 1px solid rgba(53, 154, 255, 0.68);
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .search-box:focus {
+    outline: none;
+  }
+
+  .search-box::placeholder {
+    font-weight: 600;
+    color: rgba(26, 128, 230, 0.65);
+    /* color: black; */
+  }
+
+  .search-btn {
+    position: absolute;
+    right: 6%;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background-color: #f1f7ff;
+    border: 0;
+    img {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}

@@ -1,0 +1,78 @@
+.ScheduleTopic {
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  color: #797979;
+  font-size: 12px;
+
+  /* dl 기존 스타일 없애기 */
+  & dl {
+    margin: 0;
+  }
+
+  /* 주제 타이틀 스타일 */
+  & .BiasTitle {
+    display: inline-flex;
+    font-size: 14px;
+    align-items: center;
+    gap: 3px;
+
+    & dt:first-child {
+      font-size: 20px;
+      font-weight: 400;
+      color: black;
+    }
+  }
+  /* 방송 정보 스타일 */
+  & .BiasMain {
+    display: flex;
+    flex-flow: column;
+    gap: 5px;
+    margin-block: 8px 0;
+
+    & dd {
+      margin: 0;
+      & p {
+        margin: 0;
+      }
+    }
+
+    & .TagSt {
+      display: flex;
+      gap: 54px;
+      & p {
+        display: inline;
+      }
+    }
+
+    & .MainTime {
+      display: flex;
+      gap: 18px;
+      & p {
+        display: inline;
+      }
+    }
+  }
+}
+
+.bias_img {
+  background-color: gray;
+  /* aspect-ratio: 1 / 1; */
+  /* display: block; */
+}
+.bias_img {
+  height: 90px;
+  width: 90px;
+  overflow: hidden; /* 이미지가 넘치는 부분 숨김 */
+  display: flex; /* 가운데 정렬을 위해 플렉스박스 사용 */
+  justify-content: center; /* 수평 정렬 */
+  align-items: center; /* 수직 정렬 */
+}
+
+.bias_img img {
+  max-width: 100%; /* 부모의 너비를 초과하지 않음 */
+  max-height: 100%; /* 부모의 높이를 초과하지 않음 */
+  object-fit: contain; /* 이미지 비율 유지하면서 부모 영역에 맞춤 */
+}

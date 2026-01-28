@@ -1,0 +1,17 @@
+.Board_content {
+  /* all: unset; */
+  margin: 0px;
+  padding: 20px;
+  list-style: none;
+
+  li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    font-size: 17px;
+  }
+
+  li:hover {
+    cursor: pointer;
+    color: #0056b3; /* 호버 시 색상 변경 */
+  }
+}

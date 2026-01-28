@@ -1,0 +1,259 @@
+body {
+  font-family: "Pretendard", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #111;
+}
+
+button,
+textarea,
+input {
+  font-family: "Pretendard", sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* 라이트모드 */
+body.bright-mode {
+  background-color: #131718;
+  color: #000000;
+}
+
+/* 다크모드 */
+/* body.dark-mode {
+  background-color: #111;
+  color: #303030;
+} */
+
+.all-box {
+  display: flex;
+  /* height: 100vh; */
+  max-width: 1150px;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .com1 {
+    display: none;
+  }
+
+  .all-box {
+    display: block;
+  }
+}
+
+.container {
+  max-width: 500px;
+  min-height: 100vh;
+  height: auto;
+  margin: 0 auto;
+  background-color: white;
+  position: relative;
+  /* border: 1px white solid; */
+  /* margin-bottom: 20px; */
+}
+
+.header {
+  width: 100%;
+  height: 82px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  margin-left: 5px;
+  font-size: 24px;
+  font-weight: bold;
+  /* padding-left: 5px; */
+  padding-top: 5px;
+  cursor: pointer;
+}
+
+.logo img {
+  width: 100px;
+  /* height: 50px; */
+  /* margin-left: 10px; */
+}
+
+.buttons button {
+  margin-left: 10px;
+}
+
+.banner {
+  position: relative;
+  background-color: #ccc;
+  /* margin-bottom: 20px; */
+  /* padding: 0 10px 0 10px; */
+  margin: 0 10px 30px 10px;
+  /* text-align: center; */
+  overflow: hidden;
+  /* scrollbar-width: none; */
+  border-radius: 10px;
+}
+
+.buttons {
+  /* width: 200px; */
+  /* background-color: blue; */
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+.buttons img {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.tool-button {
+  margin-top: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.bias {
+  margin-right: 10px;
+  padding-right: 10px;
+}
+
+/* ---------------------- */
+
+.contents {
+  height: auto;
+}
+
+@media (min-width: 1024px) {
+  .narrow-page {
+    display: none;
+  }
+}
+
+/* --------------- */
+/* 라이트모드 스타일 */
+.container.bright-mode {
+  background-color: #ffffff;
+}
+.bottom_bar.bright-mode {
+  background-color: #f1f7ff;
+}
+
+/* 제일 위 */
+.top-area.bright-mode {
+  background-color: #f1f7ff;
+}
+/* .logo-st.dark-mode {
+  filter: invert(100%);
+}
+.authen.dark-mode {
+  color: white;
+} */
+
+/* 가장 보고싶은 최애 */
+.bias-container {
+  width: 100%;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-bottom: 41px;
+}
+
+.bias-wrapper {
+  display: flex;
+  gap: 20px;
+  padding: 0px 20px;
+  cursor: pointer;
+}
+
+.bias-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background-color: blue; */
+  .b-name {
+    font-size: 12px;
+    margin-top: 12px;
+    color: #1f2329;
+  }
+
+  .clicked {
+    margin-top: 5px;
+    height: 3px;
+    width: 30%;
+    border-radius: 3px;
+    background-color: #1082f4;
+  }
+}
+
+.bias-box {
+  width: 100px;
+  height: 100px;
+  background-color: gray;
+  border-radius: 10px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    /* box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5); */
+  }
+}
+
+/* 실시간 랭킹 */
+.up-container {
+  margin-inline: 23px;
+
+  div {
+    display: flex;
+    align-items: center;
+
+    h3 {
+      font-weight: 500;
+    }
+    img {
+      width: 25px;
+      height: 25px;
+      margin-inline: 10px 2px;
+    }
+  }
+
+  /* 실시간 랭킹 */
+  .rt-ranking {
+    all: unset;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    color: black;
+    height: 50px;
+    overflow-y: hidden;
+    position: relative;
+    list-style: none;
+    border: 2px solid #c1dafc;
+    border-top-left-radius: 10px;
+
+    li {
+      width: 100%;
+      height: 100%;
+      align-items: center;
+
+      p {
+        background-color: #ff9393;
+        padding: 7px 12px;
+        border: 1px solid #ef6666;
+        border-radius: 5px;
+        border-top-left-radius: 15px;
+        margin-inline: 11px 30px;
+      }
+    }
+  }
+}

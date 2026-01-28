@@ -1,0 +1,122 @@
+.section-box {
+  padding-bottom: 20px;
+}
+.body-box {
+  /* height: 120dvh; */
+  margin-bottom: 60px;
+}
+
+.section-line {
+  background-color: #f1f7ff;
+  height: 5px;
+  width: 100%;
+}
+
+.dashboard-section {
+  padding-left: 20px;
+  padding-bottom: 10px;
+  padding-right: 20px;
+}
+
+.element {
+  margin: 0;
+  padding-block: 20px;
+  color: transparent;
+  height: 26px;
+  line-height: 26px;
+  position: relative;
+  white-space: nowrap;
+}
+
+.text-wrapper {
+  color: #2d2d2d;
+  letter-spacing: -0.08px;
+}
+
+.add-schedule {
+  font-size: 16px; /* 타임 차트보다 작은 크기 */
+  font-weight: 400;
+  color: #555555;
+  margin-right: 12px; /* 간격 조정 */
+  cursor: pointer;
+}
+
+.span {
+  color: #107af4;
+  letter-spacing: -0.08px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  display: flex;
+  align-items: center; /* 수직 정렬 */
+  justify-content: space-between; /* 양쪽 정렬 */
+}
+
+.my-dashboard {
+  font-size: 14px;
+  font-weight: 400;
+  background-color: #d0e4ff;
+  border-radius: 6px;
+  padding: 20px;
+  display: flex; /* Flexbox 사용 */
+  justify-content: space-between; /* 좌우 정렬 */
+}
+
+.left-group {
+  display: flex;
+  align-items: center; /* 세로 정렬 */
+  gap: 4px; /* 요소 간 간격 */
+}
+
+.right-group {
+  display: flex;
+  align-items: center; /* 세로 정렬 */
+  gap: 10px; /* 요소 간 간격 */
+}
+
+.right-group button {
+  border: none;
+  background-color: transparent;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.right-group button:hover {
+  background-color: #8ebfff; /* 호버 시 배경색 */
+  color: #333; /* 호버 시 텍스트 색상 */
+}
+
+.num-bias {
+  margin-left: 30px; /* 필요시 조정 */
+}
+
+.day-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d2d2d;
+  width: 100px;
+}
+
+.day-span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d2d2d;
+  width: 100px;
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 90%;
+}
+
+.button:hover {
+  background-color: #2980b9; /* 호버 시 색상 */
+}

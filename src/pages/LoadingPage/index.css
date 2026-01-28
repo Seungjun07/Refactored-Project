@@ -1,0 +1,15 @@
+.LoadingPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: white;
+}
+.MyPageLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
