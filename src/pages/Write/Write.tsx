@@ -7,14 +7,14 @@ import close_icon from "./../../img/close.svg";
 import img_icon from "./../../img/image.png";
 import vote_icon from "./../../img/vote.png";
 import link_icon from "./../../img/link.png";
-import EditorBox from "../../component/EditorBox.js";
+import EditorBox from "../../component/EditorBox.tsx";
 import postApi from "../../services/apis/postApi.js";
 import useBiasStore from "../../stores/BiasStore/useBiasStore.js";
 import HEADER from "../../constant/header.js";
 import toast, { Toaster } from "react-hot-toast";
 import DropDown from "../../component/DropDown/DropDown.js";
-import Input from "../../component/Input/Input.js";
-import Button from "../../component/Button/Button.js";
+import Input from "../../component/Input/Input.tsx";
+import Button from "../../component/Button/Button.tsx";
 
 const categoryData = [
   { key: 0, category: "자유게시판" },
@@ -127,7 +127,9 @@ const Write = ({ brightmode }) => {
       setCurrentFileName([""]);
     }
     const selectedFile = Array.from(event.target.files);
-    const validFiles = selectedFile.filter((file) => file.type.startsWith("image/"));
+    const validFiles = selectedFile.filter((file) =>
+      file.type.startsWith("image/"),
+    );
 
     if (validFiles.length < selectedFile.length) {
       alert("이미지 파일만 가능");
@@ -208,7 +210,9 @@ const Write = ({ brightmode }) => {
     const inputText = e.target.value;
 
     // 첫 글자가 #이면 제외하고 저장
-    const processedText = inputText.startsWith("#") ? inputText.slice(1) : inputText;
+    const processedText = inputText.startsWith("#")
+      ? inputText.slice(1)
+      : inputText;
     if (processedText.length <= 12) {
       setInputTag(processedText);
       setInputTagCount(processedText.length); // 글자 수 업데이트
@@ -358,7 +362,10 @@ const Write = ({ brightmode }) => {
             tagList.map((tag, i) => (
               <div className={style["tag-box"]} key={i}>
                 #{tag}
-                <button onClick={() => onDeleteTag(i)} className={style["delete-tag"]}>
+                <button
+                  onClick={() => onDeleteTag(i)}
+                  className={style["delete-tag"]}
+                >
                   &times; {/* 삭제 아이콘 */}
                 </button>
               </div>
@@ -389,11 +396,14 @@ const Write = ({ brightmode }) => {
       </div>
 
       {type === "short" && (
-        <p className={style["alert_message"]}>모멘트 게시글은 작성 후 24시간 동안 노출됩니다.</p>
+        <p className={style["alert_message"]}>
+          모멘트 게시글은 작성 후 24시간 동안 노출됩니다.
+        </p>
       )}
       {type === "long" && (
         <p className={style["alert_message"]}>
-          타인에게 불편을 줄 수 있는 내용의 게시글은 경고 없이 삭제 될 수 있습니다.
+          타인에게 불편을 줄 수 있는 내용의 게시글은 경고 없이 삭제 될 수
+          있습니다.
         </p>
       )}
 
@@ -512,7 +522,10 @@ export function ImagePreview({ imagePreview, imageFiles, handleRemoveImg }) {
         imagePreview.map((preview, index) => {
           return (
             <div key={index} className={style["preview-container"]}>
-              <div className={style["remove-icon"]} onClick={() => handleRemoveImg(index)}>
+              <div
+                className={style["remove-icon"]}
+                onClick={() => handleRemoveImg(index)}
+              >
                 <img src={close_icon} alt="remove" />
               </div>
               <div className={style["img-name"]}>{imageFiles[index].name}</div>
@@ -645,7 +658,10 @@ export function LinkModal({
         {linkList.length > 0 &&
           linkList.map((link, i) => {
             return (
-              <div key={i} className={`${style["preview-container"]} ${style["link-box"]}`}>
+              <div
+                key={i}
+                className={`${style["preview-container"]} ${style["link-box"]}`}
+              >
                 <div
                   className={style["remove-icon"]}
                   onClick={() => {
@@ -695,7 +711,11 @@ export function LinkModal({
         <Button type={"close"} onClick={onClickModal}>
           닫기
         </Button>
-        <Button type={"apply"} onClick={onClickModal} disabled={linkList.length === 0}>
+        <Button
+          type={"apply"}
+          onClick={onClickModal}
+          disabled={linkList.length === 0}
+        >
           적용
         </Button>
       </div>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { getModeClass } from "../../App.js";
-import WriteMoment from "../../pages/Write/Writemoment.js";
 
 import more_see from "./../../img/more_see.png";
 import moment from "./../../img/moment_img.png";
@@ -13,6 +12,7 @@ import search from "./../../img/search_nav.png";
 import searchSchedule from "./../../img/search_schedule.svg";
 
 import "./index.css";
+import WriteMoment from "@/pages/Write/Writemoment.js";
 
 const NavBar = ({ brightMode }) => {
   const navBarList = [
@@ -74,13 +74,17 @@ const NavBar = ({ brightMode }) => {
 
   const [writeMoment, setWriteMoment] = useState(false);
   useEffect(() => {
-    const currentIndex = navBarList.findIndex((item) => item.end_point === location.pathname);
+    const currentIndex = navBarList.findIndex(
+      (item) => item.end_point === location.pathname,
+    );
     setActiveIndex(currentIndex !== -1 ? currentIndex : 0);
     sessionStorage.setItem("activeNav", currentIndex !== -1 ? currentIndex : 0);
   }, [location.pathname]);
 
   useEffect(() => {
-    const currentIndex = navBarList.findIndex((item) => item.end_point === location.pathname);
+    const currentIndex = navBarList.findIndex(
+      (item) => item.end_point === location.pathname,
+    );
 
     if (!writeOptions && !writeMoment) {
       setActiveIndex(currentIndex);

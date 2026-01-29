@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SimpleSlider from "../SimpleSlider";
 import style from "./FeedThumbnail.module.css";
 import more_icon from "../../img/home_arrow.svg";
 import NoneFeed from "../NoneFeed/NoneFeed";
+import SimpleSlider from "../SimpleSlider";
 
 export default function FeedThumbnail({
   title,
@@ -25,15 +25,18 @@ export default function FeedThumbnail({
 
   return (
     <section className={style["FeedThumbnail"]}>
-      <div className={style["title-section"]} onClick={() => navigate(endPoint)}>
+      <div
+        className={style["title-section"]}
+        onClick={() => navigate(endPoint)}
+      >
         <div className={style["title"]}>
-        {/**
+          {/**
           <img src={img_src} alt="thumbnail" />
         */}
           {title}
         </div>
         <div className={`${style["more-icon"]}`}>
-            <img src={more_icon} alt="더보기"></img>
+          <img src={more_icon} alt="더보기"></img>
         </div>
       </div>
       {children}

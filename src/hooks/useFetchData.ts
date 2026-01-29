@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import mainApi from "../services/apis/mainApi";
 
 // 홈 화면 fetch 받기
-export default function useFetchData(url) {
+export default function useFetchData(url: string) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,9 +13,9 @@ export default function useFetchData(url) {
     });
   }
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return data;
 }

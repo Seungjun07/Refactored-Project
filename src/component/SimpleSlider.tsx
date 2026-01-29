@@ -6,7 +6,7 @@ import style from "./AllPost/MainPart.module.css";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 
-import { getModeClass } from "./../App.js";
+import { getModeClass } from "../App.js";
 import { Autoplay } from "swiper/modules";
 const SimpleSlider = ({ feedData, brightMode, type, className }) => {
   const showMaxCnt = 1;

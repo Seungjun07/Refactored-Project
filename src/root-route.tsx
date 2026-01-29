@@ -1,3 +1,10 @@
-export default function RootRoute(){
-    return 
+import { Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage/HomePage";
+
+export default function RootRoute() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+    </Routes>
+  );
 }

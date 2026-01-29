@@ -1,4 +1,12 @@
-export default function Input({ id, type, value, onChange, placeholder, onFocus, onClick }) {
+export default function Input({
+  id,
+  type,
+  value,
+  onChange,
+  placeholder,
+  onFocus,
+  onClick,
+}) {
   return (
     <input
       id={id}

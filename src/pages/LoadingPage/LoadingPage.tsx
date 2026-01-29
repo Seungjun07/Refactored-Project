@@ -1,5 +1,4 @@
 import { RingLoader } from "react-spinners";
-import "./index.css";
 
 export default function LoadingPage() {
   return (

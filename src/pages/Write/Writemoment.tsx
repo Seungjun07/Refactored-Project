@@ -6,9 +6,9 @@ import tag from "./../../img/tag.svg";
 import img_icon from "./../../img/image.png";
 import vote_icon from "./../../img/vote.png";
 import link_icon from "./../../img/link.png";
-import { Modal, VoteModal, LinkModal } from "./Write.js";
+import { Modal, LinkModal } from "./Write.js";
 import toast, { Toaster } from "react-hot-toast";
-import DropDown from "../../component/DropDown/DropDown.js";
+import DropDown from "@/component/DropDown/DropDown.tsx";
 
 const categoryData = [
   { key: 0, category: "자유게시판" },
@@ -81,7 +81,9 @@ const WriteMoment = ({ onClickMoment }) => {
     const inputText = e.target.value;
 
     // 첫 글자가 #이면 제외하고 저장
-    const processedText = inputText.startsWith("#") ? inputText.slice(1) : inputText;
+    const processedText = inputText.startsWith("#")
+      ? inputText.slice(1)
+      : inputText;
     if (processedText.length <= 12) {
       setInputTag(processedText);
       setInputTagCount(processedText.length); // 글자 수 업데이트
@@ -199,7 +201,9 @@ const WriteMoment = ({ onClickMoment }) => {
       setCurrentFileName([""]);
     }
     const selectedFile = Array.from(event.target.files);
-    const validFiles = selectedFile.filter((file) => file.type.startsWith("image/"));
+    const validFiles = selectedFile.filter((file) =>
+      file.type.startsWith("image/"),
+    );
 
     if (validFiles.length < selectedFile.length) {
       alert("이미지 파일만 가능");
@@ -284,7 +288,10 @@ const WriteMoment = ({ onClickMoment }) => {
               tagList.map((tag, i) => (
                 <div className={style2["tag-box"]} key={i}>
                   #{tag}
-                  <button onClick={() => onDeleteTag(i)} className={style2["delete-tag"]}>
+                  <button
+                    onClick={() => onDeleteTag(i)}
+                    className={style2["delete-tag"]}
+                  >
                     &times; {/* 삭제 아이콘 */}
                   </button>
                 </div>
@@ -292,7 +299,9 @@ const WriteMoment = ({ onClickMoment }) => {
           </div>
 
           <div className={` ${style2["content-container"]}`}>
-            <div className={`${style2["content-title"]}`}>경험을 모두와 함께 이야기 해봐요!</div>
+            <div className={`${style2["content-title"]}`}>
+              경험을 모두와 함께 이야기 해봐요!
+            </div>
 
             <textarea
               className={style2["write_body"]}
