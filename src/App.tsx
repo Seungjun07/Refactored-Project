@@ -1,10 +1,10 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import MyPage from "./pages/MyPage/Mypage";
-import MyPageEdit from "./pages/MyPage/MypageEdit";
-import NOVALogin from "./pages/NovaLogin/NovaLogin";
-import MoreSee from "./pages/MoreSee/MoreSee";
+import MyPage from "./pages/MyPage/Mypage.js";
+import MyPageEdit from "./pages/MyPage/MypageEdit.js";
+import NOVALogin from "./pages/NovaLogin/NovaLogin.js";
+import MoreSee from "./pages/MoreSee/MoreSee.js";
 import SignUp from "./pages/SignUp/SignUp.js";
 import Temrs from "./pages/Temrs/Temrs.js";
 import FindPw from "./pages/FindPw/FindPw.js";
