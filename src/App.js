@@ -112,10 +112,9 @@ function App() {
       <Route path="/search/topic" element={<SearchTopicPage />}></Route>
       <Route path="/explore/schedule" element={<ScheduleExplore />}></Route>
 
-
       {/* 광고 페이지 */}
-      <Route path="/nova_ad/home" element={<NovaADHomepage/>}></Route>
-      <Route path="/nova_ad/charging" element={<PaymentPage/>}></Route>
+      <Route path="/nova_ad/home" element={<NovaADHomepage />}></Route>
+      <Route path="/nova_ad/charging" element={<PaymentPage />}></Route>
 
       {/* 이벤트는 다다음 버전에 추가 */}
       {/*<Route path="/search/event" element={<ScheduleResearch />}></Route>/*}

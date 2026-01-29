@@ -6,15 +6,26 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import ScrollToTop from "./utils/ScrollToTop";
 
+async function enableMocking() {
+  if (process.env.NODE_ENV !== "development") {
+    return;
+  }
+  const { worker } = await import("./mocks/browser");
+  return worker.start();
+}
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  // <React.StrictMode>
-  <BrowserRouter>
-    <ScrollToTop />
-    <App />
-  </BrowserRouter>
-  // </React.StrictMode>
-);
+
+enableMocking().then(() => {
+  root.render(
+    // <React.StrictMode>
+    <BrowserRouter>
+      <ScrollToTop />
+      <App />
+    </BrowserRouter>,
+    // </React.StrictMode>
+  );
+});
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(//////console.log))

@@ -13,9 +13,9 @@ export default function useFetchData(url) {
     });
   }
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   return data;
 }

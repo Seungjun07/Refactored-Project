@@ -21,8 +21,8 @@ const SimpleSlider = ({ feedData, brightMode, type, className }) => {
     centerMode: true,
     centerPadding: "0px",
     arrows: false,
-    autoplay:true,
-    autoplaySpeed:7000
+    autoplay: true,
+    autoplaySpeed: 7000,
   };
   // style안붙은 것은 slider.css에서 수정
   let navigate = useNavigate();
@@ -46,7 +46,7 @@ const SimpleSlider = ({ feedData, brightMode, type, className }) => {
   const handleMouseMove = (e) => {
     if (startPosition.x && startPosition.y) {
       const distance = Math.sqrt(
-        (e.clientX - startPosition.x) ** 2 + (e.clientY - startPosition.y) ** 2
+        (e.clientX - startPosition.x) ** 2 + (e.clientY - startPosition.y) ** 2,
       );
       setMoveDistance(distance);
 
@@ -75,7 +75,7 @@ const SimpleSlider = ({ feedData, brightMode, type, className }) => {
       }`}
     >
       <Slider {...settings}>
-        {feedData.length !== 0 &&
+        {feedData.length > 0 &&
           feedData.map((feed, i) => {
             return (
               <div key={i} className="slick-slide">
@@ -91,7 +91,9 @@ const SimpleSlider = ({ feedData, brightMode, type, className }) => {
                   >
                     {type === "bias" && (
                       <div className={style["name-container"]}>
-                        <div className={style["profile"]}>{feed.feed.nickname}</div>
+                        <div className={style["profile"]}>
+                          {feed.feed.nickname}
+                        </div>
                       </div>
                     )}
 

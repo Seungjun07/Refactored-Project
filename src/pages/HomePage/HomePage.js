@@ -27,9 +27,9 @@ export function getModeClass(mode) {
 }
 
 export default function HomePage() {
-  let todayBestFeed = useFetchData(`/home/today_best`);
-  let weeklyFeed = useFetchData(`/home/weekly_best`);
-  let allFeed = useFetchData(`/home/all_feed`);
+  let todayBestFeed = useFetchData(`home/today_best`);
+  let weeklyFeed = useFetchData(`home/weekly_best`);
+  let allFeed = useFetchData(`home/all_feed`);
 
   let { biasId, biasList, setBiasId } = useBiasStore();
   let [feedData, setFeedData] = useState([]);
@@ -69,7 +69,8 @@ export default function HomePage() {
     return localStorage.getItem("brightMode") || "bright"; // 기본값은 'bright'
   });
   useEffect(() => {
-    document.body.className = brightMode === "dark" ? "dark-mode" : "bright-mode";
+    document.body.className =
+      brightMode === "dark" ? "dark-mode" : "bright-mode";
   }, [brightMode]);
 
   const handleModeChange = (newMode) => {
@@ -102,7 +103,10 @@ export default function HomePage() {
           endPoint={`/feed_list?type=bias`}
           customClassName="custom-height"
         >
-          <BiasBoxes setBiasId={setBiasId} fetchBiasCategoryData={fetchBiasCategoryData} />
+          <BiasBoxes
+            setBiasId={setBiasId}
+            fetchBiasCategoryData={fetchBiasCategoryData}
+          />
         </FeedThumbnail>
       </div>
 
