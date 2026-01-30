@@ -4,18 +4,18 @@ import mainApi from "../services/apis/mainApi";
 // 홈 화면 fetch 받기
 export default function useFetchData(url: string) {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function fetchData() {
-    await mainApi.get(url).then((res) => {
-      setData(res.data.body.send_data);
-      setLoading(false);
-    });
+    const response = await mainApi.get(url);
+
+    setData(response.data.body.send_data);
+    setIsLoading(false);
   }
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  return data;
+  return { data, isLoading };
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import style2 from "./WriteMoment.module.css";
-import useBiasStore from "../../stores/BiasStore/useBiasStore.js";
 import tag from "./../../img/tag.svg";
 import img_icon from "./../../img/image.png";
 import vote_icon from "./../../img/vote.png";
@@ -9,6 +8,7 @@ import link_icon from "./../../img/link.png";
 import { Modal, LinkModal } from "./Write.js";
 import toast, { Toaster } from "react-hot-toast";
 import DropDown from "@/component/DropDown/DropDown.tsx";
+import useBiasStore from "@/stores/BiasStore/useBiasStore.js";
 
 const categoryData = [
   { key: 0, category: "자유게시판" },

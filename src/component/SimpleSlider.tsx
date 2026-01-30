@@ -101,7 +101,7 @@ const SimpleSlider = ({ feedData, brightMode, type, className }) => {
                       <div className={style["img-container"]}>
                         <img
                           src={
-                            feed.feed.image.length > 0
+                            feed.feed.image?.length > 0
                               ? feed.feed.image[0]
                               : "https://kr.object.ncloudstorage.com/nova-feed-images/nova-platform.png"
                           }

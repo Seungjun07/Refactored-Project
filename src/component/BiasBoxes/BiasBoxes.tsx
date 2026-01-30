@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 import { BIAS_URL } from "../../constant/biasUrl";
-import useBiasStore from "../../stores/BiasStore/useBiasStore";
 import useLoginStore from "../../stores/LoginStore/useLoginStore";
 import useDragScroll from "../../hooks/useDragScroll";
 import add_bias_icon from "./../../img/add_bias.png";
 import tempBias from "./../../img/tempBias.png";
 
 import "./index.css";
+import useBiasStore from "@/stores/BiasStore/useBiasStore";
 
 export default function BiasBoxes({ fetchBiasCategoryData }) {
   const navigate = useNavigate();
@@ -94,7 +94,7 @@ export default function BiasBoxes({ fetchBiasCategoryData }) {
                 {bias && (
                   <img
                     className={clickedBias === i ? "clicked-img" : ""}
-                    src={BIAS_URL + `${bias.bid}.PNG`}
+                    // src={BIAS_URL + `${bias.bid}.PNG`}
                     onError={(e) => (e.target.src = tempBias)}
                     alt="bias"
                     onClick={() => {
@@ -111,7 +111,10 @@ export default function BiasBoxes({ fetchBiasCategoryData }) {
             </div>
           );
         })}
-        <AddBiasButton onClickAddButton={onClickAddButton} add_bias_icon={add_bias_icon} />
+        <AddBiasButton
+          onClickAddButton={onClickAddButton}
+          add_bias_icon={add_bias_icon}
+        />
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ export default function StoryFeed({ feedData, type, hasDragged }) {
       <div className={style["all-img"]}>
         <img
           src={
-            feedData.feed?.image.length > 0
+            feedData.feed?.image?.length > 0
               ? feedData.feed.image[0]
               : "https://kr.object.ncloudstorage.com/nova-feed-images/nova-platform.png"
           }

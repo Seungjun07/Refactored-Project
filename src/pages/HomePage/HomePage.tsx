@@ -26,49 +26,51 @@ import BiasBoxes from "@/component/BiasBoxes/BiasBoxes.js";
 import FeedThumbnail from "@/component/feed-list/FeedThumbnail.js";
 import AllPost from "@/component/AllPost/AllPost.js";
 import NavBar from "@/component/NavBar/NavBar.js";
+import useBiasStore from "@/stores/BiasStore/useBiasStore.ts";
+import mainApi from "@/services/apis/mainApi.ts";
 
 // export function getModeClass(mode) {
 //   return mode === "dark" ? "dark-mode" : "bright-mode";
 // }
 
 export default function HomePage() {
-  let todayBestFeed = useFetchData(`/home/today_best`);
-  let weeklyFeed = useFetchData(`/home/weekly_best`);
-  let allFeed = useFetchData(`/home/all_feed`);
+  let { data: todayBestFeed } = useFetchData(`/home/today_best`);
+  let { data: weeklyFeed } = useFetchData(`/home/weekly_best`);
+  let { data: allFeed } = useFetchData(`/home/all_feed`);
 
-  // let { biasId, biasList, setBiasId } = useBiasStore();
+  let { biasId, biasList, setBiasId } = useBiasStore();
   let [feedData, setFeedData] = useState([]);
-  // const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // let bids = biasList.map((item, i) => {
-  //   return item.bid;
-  // });
+  let bids = biasList.map((item, i) => {
+    return item.bid;
+  });
   // useEffect(() => {
   //   if (bids.length > 0 && !biasId) {
   //     setBiasId(bids[0]);
   //   }
   // }, [bids]);
 
-  // async function fetchBiasCategoryData(bid) {
-  //   await postApi
-  //     .post(`feed_explore/feed_with_community`, {
-  //       header: HEADER,
-  //       body: {
-  //         bid: biasId || bids?.[0] || "",
-  //         board: "자유게시판",
-  //         key: -1,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       setFeedData(res.data.body.send_data);
-  //       setIsLoading(false);
-  //     });
-  // }
+  async function fetchBiasCategoryData(bid) {
+    await mainApi
+      .post(`feed_explore/feed_with_community`, {
+        header: HEADER,
+        body: {
+          bid: biasId || bids?.[0] || "",
+          board: "자유게시판",
+          key: -1,
+        },
+      })
+      .then((res) => {
+        setFeedData(res.data.body.send_data);
+        setIsLoading(false);
+      });
+  }
 
-  // useEffect(() => {
-  //   setFeedData([]);
-  //   fetchBiasCategoryData();
-  // }, [biasId]);
+  useEffect(() => {
+    setFeedData([]);
+    fetchBiasCategoryData();
+  }, [biasId]);
 
   // const [brightMode, setBrightMode] = useState(() => {
   //   return localStorage.getItem("brightMode") || "bright"; // 기본값은 'bright'
@@ -108,8 +110,8 @@ export default function HomePage() {
           customClassName="custom-height"
         >
           <BiasBoxes
-          // setBiasId={setBiasId}
-          // fetchBiasCategoryData={fetchBiasCategoryData}
+            setBiasId={setBiasId}
+            // fetchBiasCategoryData={fetchBiasCategoryData}
           />
         </FeedThumbnail>
       </div>

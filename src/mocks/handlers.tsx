@@ -4,24 +4,6 @@ import { http, HttpResponse } from "msw";
 // baseURL을 환경변수나 상수로 정의
 
 export const handlers = [
-  http.get(`${BASE_URL}/home/today_best`, ({ request }) => {
-    // 요청 헤더 확인 (디버깅용)
-    console.log("MSW intercepted:", request.url);
-    console.log("Credentials:", request.credentials);
-
-    // 임시 응답 데이터
-    return HttpResponse.json({
-      success: true,
-      data: {
-        todayBest: [
-          { id: 1, title: "상품1", price: 10000 },
-          { id: 2, title: "상품2", price: 20000 },
-          { id: 3, title: "상품3", price: 30000 },
-        ],
-      },
-    });
-  }),
-
   http.get(`${BASE_URL}/home/banner`, ({ request }) => {
     // 요청 헤더 확인 (디버깅용)
     console.log("MSW intercepted:", request.url);

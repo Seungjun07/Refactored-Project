@@ -9,12 +9,13 @@ import vote_icon from "./../../img/vote.png";
 import link_icon from "./../../img/link.png";
 import EditorBox from "../../component/EditorBox.tsx";
 import postApi from "../../services/apis/postApi.js";
-import useBiasStore from "../../stores/BiasStore/useBiasStore.js";
 import HEADER from "../../constant/header.js";
 import toast, { Toaster } from "react-hot-toast";
 import DropDown from "../../component/DropDown/DropDown.js";
 import Input from "../../component/Input/Input.tsx";
 import Button from "../../component/Button/Button.tsx";
+import useBiasStore from "@/stores/BiasStore/useBiasStore.ts";
+import mainApi from "@/services/apis/mainApi.ts";
 
 const categoryData = [
   { key: 0, category: "자유게시판" },
@@ -639,7 +640,7 @@ export function LinkModal({
   const [isLoading, setIsLoading] = useState(true);
 
   async function fetchkUrlImage() {
-    await postApi
+    await mainApi
       .post("nova_sub_system/image_tag", {
         header: HEADER,
         body: {

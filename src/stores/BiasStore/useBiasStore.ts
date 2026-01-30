@@ -1,5 +1,6 @@
+import { getBiasList } from "@/features/bias/api/bias";
 import { create } from "zustand";
-import getBiasList from "../../services/getBiasList";
+
 const useBiasStore = create((set) => ({
   biasList: [],
   loading: false,
