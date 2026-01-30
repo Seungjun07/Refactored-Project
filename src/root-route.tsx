@@ -5,8 +5,8 @@ import FeedPage from "./pages/FeedPage/FeedPage";
 export default function RootRoute() {
   return (
     <Routes>
-      <Route path="/feed_list" element={<FeedPage />}></Route>
-      <Route path="/feed_list/:fid" element={<FeedPage />}></Route>
+      <Route path="/feed" element={<FeedPage />}></Route>
+      <Route path="/feed/:fid" element={<FeedPage />}></Route>
 
       <Route path="/" element={<HomePage />} />
     </Routes>

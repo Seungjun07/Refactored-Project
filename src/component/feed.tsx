@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Viewer } from "@toast-ui/react-editor";
-import style from "./../pages/FeedPage/FeedPage.module.css";
+import style from "@/pages/FeedPage/FeedPage.module.css";
 
 import star from "./../img/favorite.png";
 import link_pin_icon from "./../img/link_pin.svg";
@@ -14,20 +14,21 @@ import mainApi from "../services/apis/mainApi";
 import useDragScroll from "../hooks/useDragScroll";
 import useFeedActions from "../hooks/useFeedActions";
 
-export function useBrightMode() {
-  const params = new URLSearchParams(window.location.search);
-  const brightModeFromUrl = params.get("brightMode");
+// export function useBrightMode() {
+//   const params = new URLSearchParams(window.location.search);
+//   const brightModeFromUrl = params.get("brightMode");
 
-  const initialMode = brightModeFromUrl || localStorage.getItem("brightMode") || "bright";
+//   const initialMode =
+//     brightModeFromUrl || localStorage.getItem("brightMode") || "bright";
 
-  const [mode, setMode] = useState(initialMode);
+//   const [mode, setMode] = useState(initialMode);
 
-  useEffect(() => {
-    localStorage.setItem("brightMode", mode);
-  }, [mode]);
+//   useEffect(() => {
+//     localStorage.setItem("brightMode", mode);
+//   }, [mode]);
 
-  return [mode, setMode];
-}
+//   return [mode, setMode];
+// }
 const header = HEADER;
 
 export default function Feed({ feed, setFeedData, type }) {
@@ -56,14 +57,22 @@ export default function Feed({ feed, setFeedData, type }) {
   );
 }
 
-export function ContentFeed({ detailPage, feed, handleCheckStar, links, fetchReportResult }) {
+export function ContentFeed({
+  detailPage,
+  feed,
+  handleCheckStar,
+  links,
+  fetchReportResult,
+}) {
   let navigate = useNavigate();
   const { scrollRef, hasDragged, dragHandlers } = useDragScroll();
 
   async function fetchOriginalText(fid) {
-    await mainApi.get(`feed_explore/original_feed_data?fid=${fid}`).then((res) => {
-      console.log("done");
-    });
+    await mainApi
+      .get(`feed_explore/original_feed_data?fid=${fid}`)
+      .then((res) => {
+        console.log("done");
+      });
   }
 
   if (!feed) {
@@ -89,10 +98,14 @@ export function ContentFeed({ detailPage, feed, handleCheckStar, links, fetchRep
         fetchOriginalText={fetchOriginalText}
       />
 
-      <div className={`${style["body-container"]} ${detailPage ? "" : style["long-form-hidden"]}`}>
+      <div
+        className={`${style["body-container"]} ${detailPage ? "" : style["long-form-hidden"]}`}
+      >
         <HashTags hashtags={feed.hashtag} />
 
-        {feed.fclass === "short" && <div className={style["body-content"]}>{feed.body}</div>}
+        {feed.fclass === "short" && (
+          <div className={style["body-content"]}>{feed.body}</div>
+        )}
         {feed.image?.length > 0 && feed.fclass === "short" ? (
           <div className={style["image-container"]}>
             <div

@@ -64,7 +64,7 @@ export default function HomePage() {
           img_src={new_pin}
           feedData={feeds.biasFeed}
           type={"bias"}
-          endPoint={`/feed_list?type=bias`}
+          endPoint={`/feed?type=bias`}
           customClassName="custom-height"
         >
           <BiasBoxes
@@ -83,7 +83,7 @@ export default function HomePage() {
           }
           img_src={best}
           feedData={feeds.todayBestFeed}
-          endPoint={`/feed_list?type=today`}
+          endPoint={`/feed?type=today`}
         />
         <FeedThumbnail
           title={
@@ -93,7 +93,7 @@ export default function HomePage() {
           }
           img_src={best}
           feedData={feeds.weeklyFeed}
-          endPoint={`/feed_list?type=weekly`}
+          endPoint={`/feed?type=weekly`}
         />
 
         <FeedThumbnail
@@ -101,7 +101,7 @@ export default function HomePage() {
           img_src={all_post}
           feedData={feeds.allFeed}
           allPost={<AllPost allFeed={feeds.allFeed} />}
-          endPoint={"/feed_list?type=all"}
+          endPoint={"/feed?type=all"}
         />
       </section>
       <NavBar></NavBar>

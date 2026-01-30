@@ -13,12 +13,11 @@ import { getModeClass } from "../../App.js";
 
 import filter_icon from "./../../img/filter.svg";
 
-import Feed from "../../component/feed.js";
 import BiasBoxes from "../../component/BiasBoxes/BiasBoxes.js";
-import FilterModal from "../../component/FilterModal/FilterModal.js";
+// import FilterModal from "../../component/FilterModal/FilterModal.js";
 import SearchBox from "../../component/SearchBox.js";
 import KeywordBox from "../../component/keyword/KeywordBox.js";
-import CategoryModal from "../../component/CategoryModal/CategoryModal.js";
+// import CategoryModal from "../../component/CategoryModal/CategoryModal.js";
 import NoneFeed from "../../component/NoneFeed/NoneFeed.js";
 import Header from "../../component/Header/Header.js";
 import StoryFeed from "../../component/StoryFeed/StoryFeed.js";
@@ -30,7 +29,8 @@ import LoadingPage from "../LoadingPage/LoadingPage.js";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver.js";
 import useFetchFeedList from "../../hooks/useFetchFeedList.js";
 import useBoardStore from "../../stores/BoardStore/useBoardStore.js";
-import MyPageLoading from "../LoadingPage/MypageLoading.js";
+import Feed from "@/component/feed.js";
+// import MyPageLoading from "../LoadingPage/MypageLoading.js";
 
 export default function FeedPage() {
   // url 파라미터 가져오기
@@ -302,14 +302,14 @@ export default function FeedPage() {
               </p>
             </div>
 
-            {biasId && (
+            {/* {biasId && (
               <CategoryModal
                 SetIsOpen={setIsOpendCategory}
                 onClickCategory={onClickCategory}
                 biasId={biasId}
                 isOpend={isOpendCategory}
               />
-            )}
+            )} */}
           </div>
         )}
         {type === "all" && (
@@ -348,8 +348,9 @@ export default function FeedPage() {
           }
         >
           {isLoading ? (
-            <MyPageLoading />
-          ) : feedData.length > 0 ? (
+            <></>
+          ) : // <MyPageLoading />
+          feedData.length > 0 ? (
             feedData.map((feed, i) => {
               return (
                 <Feed
@@ -364,7 +365,7 @@ export default function FeedPage() {
             <NoneFeed />
           )}
           <div ref={targetRef} style={{ height: "1px" }}></div>
-          {isFilterClicked && (
+          {/* {isFilterClicked && (
             <FilterModal
               onClickFilterButton={onClickFilterButton}
               setFilterCategory={setFilterCategory}
@@ -372,7 +373,7 @@ export default function FeedPage() {
               fetchAllFeed={fetchAllFeed}
               onClickApplyButton1={onClickApplyButton1}
             />
-          )}
+          )} */}
         </div>
       </div>
       {/* <NavBar /> */}
