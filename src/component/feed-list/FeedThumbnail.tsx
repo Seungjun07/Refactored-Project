@@ -5,6 +5,8 @@ import more_icon from "../../img/home_arrow.svg";
 import NoneFeed from "../NoneFeed/NoneFeed";
 import SimpleSlider from "../SimpleSlider";
 
+interface FeedThumbnailProps {}
+
 export default function FeedThumbnail({
   title,
   img_src,
@@ -30,9 +32,7 @@ export default function FeedThumbnail({
         onClick={() => navigate(endPoint)}
       >
         <div className={style["title"]}>
-          {/**
           <img src={img_src} alt="thumbnail" />
-        */}
           {title}
         </div>
         <div className={`${style["more-icon"]}`}>

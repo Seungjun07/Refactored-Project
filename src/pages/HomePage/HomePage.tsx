@@ -1,11 +1,9 @@
-import { useEffect } from "react";
-
 import all_post from "@/img/all_post.png";
 import best from "@/img/best.png";
 import new_pin from "@/img/new_pin.png";
 
 // import useTagStore from "../../stores/TagStore/useTagStore.js";
-import LoadingPage from "../LoadingPage/LoadingPage.js";
+// import LoadingPage from "../LoadingPage/LoadingPage.js";
 import "@/App.css";
 import Header from "@/component/Header/Header.tsx";
 import SearchBox from "@/component/SearchBox.tsx";
@@ -14,35 +12,23 @@ import BiasBoxes from "@/component/BiasBoxes/BiasBoxes.tsx";
 import FeedThumbnail from "@/component/feed-list/FeedThumbnail.tsx";
 import AllPost from "@/component/AllPost/AllPost.tsx";
 import NavBar from "@/component/NavBar/NavBar.tsx";
-import useBiasStore from "@/stores/BiasStore/useBiasStore.ts";
-import useFetchFeedData from "../../features/feed/hooks/useFetchFeedData.ts";
-import { useFetchFeedWithBias } from "@/features/feed/hooks/useFetchFeedWithBias.ts";
+import { useHomeFeed } from "@/features/feed/hooks/useHomeFeed.ts";
 
 // export function getModeClass(mode) {
 //   return mode === "dark" ? "dark-mode" : "bright-mode";
 // }
 
 export default function HomePage() {
-  let { data: todayBestFeed } = useFetchFeedData(`/home/today_best`);
-  let { data: weeklyFeed } = useFetchFeedData(`/home/weekly_best`);
-  let { data: allFeed } = useFetchFeedData(`/home/all_feed`);
+  const { feeds, biasActions } = useHomeFeed();
 
-  let { biasId, biasList, setBiasId } = useBiasStore();
-
-  let bids = biasList.map((item, i) => {
-    return item.bid;
-  });
+  // let bids = biasList.map((item, i) => {
+  //   return item.bid;
+  // });
   // useEffect(() => {
   //   if (bids.length > 0 && !biasId) {
   //     setBiasId(bids[0]);
   //   }
   // }, [bids]);
-
-  const { feedData, isLoading, fetchBiasCategoryData } = useFetchFeedWithBias();
-
-  useEffect(() => {
-    fetchBiasCategoryData();
-  }, [biasId]);
 
   // const [brightMode, setBrightMode] = useState(() => {
   //   return localStorage.getItem("brightMode") || "bright"; // 기본값은 'bright'
@@ -76,14 +62,14 @@ export default function HomePage() {
             </>
           }
           img_src={new_pin}
-          feedData={feedData}
+          feedData={feeds.biasFeed}
           type={"bias"}
           endPoint={`/feed_list?type=bias`}
           customClassName="custom-height"
         >
           <BiasBoxes
-            setBiasId={setBiasId}
-            // fetchBiasCategoryData={fetchBiasCategoryData}
+            setBiasId={biasActions.setBiasId}
+            fetchBiasCategoryData={biasActions.fetchBiasCategoryData}
           />
         </FeedThumbnail>
       </div>
@@ -96,7 +82,7 @@ export default function HomePage() {
             </>
           }
           img_src={best}
-          feedData={todayBestFeed}
+          feedData={feeds.todayBestFeed}
           endPoint={`/feed_list?type=today`}
         />
         <FeedThumbnail
@@ -106,15 +92,15 @@ export default function HomePage() {
             </>
           }
           img_src={best}
-          feedData={weeklyFeed}
+          feedData={feeds.weeklyFeed}
           endPoint={`/feed_list?type=weekly`}
         />
 
         <FeedThumbnail
           title={"모든 게시글"}
           img_src={all_post}
-          feedData={allFeed}
-          allPost={<AllPost allFeed={allFeed} />}
+          feedData={feeds.allFeed}
+          allPost={<AllPost allFeed={feeds.allFeed} />}
           endPoint={"/feed_list?type=all"}
         />
       </section>

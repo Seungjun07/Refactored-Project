@@ -18,11 +18,10 @@ export default function BiasBoxes({ fetchBiasCategoryData }) {
 
   const { isLogin } = useLoginStore();
   useEffect(() => {
-    fetchBiasList();
     if (isLogin === "done") {
       fetchBiasList();
     }
-  }, []);
+  }, [isLogin]);
 
   const [clickedBias, setClickedBias] = useState(0);
 
@@ -119,6 +118,30 @@ export default function BiasBoxes({ fetchBiasCategoryData }) {
     </div>
   );
 }
+// function BiasItem({bias,index,isClicked,onClick}) {
+//   return (
+//     <div  className="bias-info">
+//       <div className="bias-box">
+//         {bias && (
+//           <img
+//             className={clickedBias === i ? "clicked-img" : ""}
+//             // src={BIAS_URL + `${bias.bid}.PNG`}
+//             onError={(e) => (e.target.src = tempBias)}
+//             alt="bias"
+//             onClick={() => {
+//               if (hasDragged) return;
+//               onClickCurrentBias(i);
+//               onClickBiasId(bias.bid);
+//               fetchBiasCategoryData && fetchBiasCategoryData(bias.bid);
+//             }}
+//           />
+//         )}
+//       </div>
+//       <div className="b-name">{bias?.bname || <span>&nbsp;</span>}</div>
+//       {clickedBias === i && <div className="clicked"></div>}
+//     </div>
+//   );
+// }
 
 function AddBiasButton({ onClickAddButton, add_bias_icon }) {
   return (

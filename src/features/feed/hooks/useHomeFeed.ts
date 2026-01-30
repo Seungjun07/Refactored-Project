@@ -1,0 +1,31 @@
+import useBiasStore from "@/stores/BiasStore/useBiasStore";
+import { useEffect } from "react";
+import useFetchFeedData from "./useFetchFeedData";
+import { useFetchFeedWithBias } from "./useFetchFeedWithBias";
+
+export function useHomeFeed() {
+  const { data: todayBestFeed } = useFetchFeedData(`/home/today_best`);
+  const { data: weeklyFeed } = useFetchFeedData(`/home/weekly_best`);
+  const { data: allFeed } = useFetchFeedData(`/home/all_feed`);
+
+  let { biasId, biasList, setBiasId } = useBiasStore();
+
+  const { feedData: biasFeed, fetchBiasCategoryData } = useFetchFeedWithBias();
+
+  useEffect(() => {
+    fetchBiasCategoryData();
+  }, [biasId]);
+
+  return {
+    feeds: {
+      todayBestFeed,
+      weeklyFeed,
+      allFeed,
+      biasFeed,
+    },
+    biasActions: {
+      setBiasId,
+      fetchBiasCategoryData,
+    },
+  };
+}

@@ -2,13 +2,21 @@ import { useNavigate } from "react-router-dom";
 import search_icon from "./../img/home_search.svg";
 import style from "./feed-list/FeedThumbnail.module.css";
 
+interface SearchBoxProps {
+  type?: string;
+  searchWord?: string;
+  onClickSearch?: () => void;
+  onChangeSearchWord?: () => void;
+  onKeyDown?: () => void;
+}
+
 export default function SearchBox({
   type,
   searchWord,
   onClickSearch,
   onChangeSearchWord,
   onKeyDown,
-}) {
+}: SearchBoxProps) {
   let navigate = useNavigate();
 
   function onClickSearchBtn(e) {
@@ -36,7 +44,9 @@ export default function SearchBox({
           onChange={(e) => {
             onChangeSearchWord(e);
           }}
-          placeholder={searchWord ? searchWord : "보고 싶은 최애를 검색해보세요"}
+          placeholder={
+            searchWord ? searchWord : "보고 싶은 최애를 검색해보세요"
+          }
           type="text"
         ></input>
       ) : (
