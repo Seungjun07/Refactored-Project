@@ -32,7 +32,7 @@ import useFetchFeedList from "../../hooks/useFetchFeedList.js";
 import useBoardStore from "../../stores/BoardStore/useBoardStore.js";
 import MyPageLoading from "../LoadingPage/MypageLoading.js";
 
-export default function FeedList() {
+export default function FeedPage() {
   // url 파라미터 가져오기
   const [params] = useSearchParams();
   const type = params.get("type");

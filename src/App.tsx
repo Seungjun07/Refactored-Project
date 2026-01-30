@@ -27,6 +27,7 @@ import { Routes, Route } from "react-router-dom";
 // import SearchResultPage from "./pages/SearchResultPage/SearchResultPage.js";
 // import NoticePage from "./pages/NoticePage/NoticePage.js";
 import HomePage from "./pages/HomePage/HomePage.js";
+import RootRoute from "./root-route.js";
 // import ReportPage from "./pages/ReportPage/ReportPage.js";
 // import SearchSchedulePage from "./pages/SearchSchedulePage/SearchSchedulePage.js";
 // import TestPage from "./pages/TestPage/TestPage.js";
@@ -64,33 +65,50 @@ function App() {
     document.body.style.zoom = 100 + "%";
   }
 
-  return (
-    <Routes>
-      {/* 더보기 페이지 / 마이페이지 */}
-      {/* <Route
+  return <RootRoute />;
+  // <Routes>
+  {
+    /* 더보기 페이지 / 마이페이지 */
+  }
+  {
+    /* <Route
         path="/more_see"
         element={<MoreSee onModeChange={handleModeChange} />}
       ></Route>
       <Route path="/mypage" element={<MyPage />}></Route>
       <Route path="/mypage_edit" element={<MyPageEdit />}></Route>
- */}
-      {/* 로그인 및 비밀번호 및 회원가입 */}
-      {/* <Route
+ */
+  }
+  {
+    /* 로그인 및 비밀번호 및 회원가입 */
+  }
+  {
+    /* <Route
         path="/novalogin"
         element={<NOVALogin brightMode={brightMode} />}
       ></Route>
       <Route path="/find_pw" element={<FindPw />}></Route>
       <Route path="/find_pw_change" element={<FindPwChange />}></Route>
-      <Route path="/signup" element={<SignUp />}></Route> */}
+      <Route path="/signup" element={<SignUp />}></Route> */
+  }
 
-      {/* 이용약관 및 공지사항 */}
-      {/* <Route path="/terms_page" element={<Temrs />}></Route>
+  {
+    /* 이용약관 및 공지사항 */
+  }
+  {
+    /* <Route path="/terms_page" element={<Temrs />}></Route>
       <Route path="/notice" element={<NoticePage />} />
-      <Route path="/report" element={<ReportPage />} /> */}
-      {/* <Route path="/notice/:nid" element={<Notice />} /> */}
+      <Route path="/report" element={<ReportPage />} /> */
+  }
+  {
+    /* <Route path="/notice/:nid" element={<Notice />} /> */
+  }
 
-      {/* 피드 페이지 */}
-      {/* <Route path="/write_feed" element={<Write />}>
+  {
+    /* 피드 페이지 */
+  }
+  {
+    /* <Route path="/write_feed" element={<Write />}>
         <Route path=":type" element={<Write />}></Route>
       </Route>
       <Route
@@ -99,44 +117,74 @@ function App() {
       ></Route>
       <Route path="/feed_list/:fid" element={<FeedList />}></Route>
       <Route path="/feed_detail/:fid" element={<FeedDetail />}></Route>
-      <Route path="/follow_page" element={<FollowPage />}></Route> */}
+      <Route path="/follow_page" element={<FollowPage />}></Route> */
+  }
 
-      {/* 검색 페이지 */}
-      {/* <Route path="/search" element={<SearchPage />}></Route>
-      <Route path="/search_result" element={<SearchResultPage />}></Route> */}
+  {
+    /* 검색 페이지 */
+  }
+  {
+    /* <Route path="/search" element={<SearchPage />}></Route>
+      <Route path="/search_result" element={<SearchResultPage />}></Route> */
+  }
 
-      {/* 스케줄 페이지 */}
-      {/* <Route path="/schedule" element={<ScheduleDashboard />}></Route>
+  {
+    /* 스케줄 페이지 */
+  }
+  {
+    /* <Route path="/schedule" element={<ScheduleDashboard />}></Route>
       <Route path="/schedule/my_schedule" element={<MySchedulePage />}></Route>
       <Route path="/search/schedule" element={<SearchSchedulePage />}></Route>
       <Route path="/search/topic" element={<SearchTopicPage />}></Route>
-      <Route path="/explore/schedule" element={<ScheduleExplore />}></Route> */}
+      <Route path="/explore/schedule" element={<ScheduleExplore />}></Route> */
+  }
 
-      {/* 광고 페이지 */}
-      {/* <Route path="/nova_ad/home" element={<NovaADHomepage />}></Route>
-      <Route path="/nova_ad/charging" element={<PaymentPage />}></Route> */}
+  {
+    /* 광고 페이지 */
+  }
+  {
+    /* <Route path="/nova_ad/home" element={<NovaADHomepage />}></Route>
+      <Route path="/nova_ad/charging" element={<PaymentPage />}></Route> */
+  }
 
-      {/* 이벤트는 다다음 버전에 추가 */}
-      {/*<Route path="/search/event" element={<ScheduleResearch />}></Route>/*}
+  {
+    /* 이벤트는 다다음 버전에 추가 */
+  }
+  {
+    /*<Route path="/search/event" element={<ScheduleResearch />}></Route>/*}
 
-      {/* 펀딩 페이지 목록 */}
-      {/* 
+      {/* 펀딩 페이지 목록 */
+  }
+  {
+    /* 
       <Route path="/like_funding" element={<LikeFunding />}></Route>
       <Route path="/duck_funding" element={<DuckFunding />}></Route>
       <Route path="/funding_project/:type" element={<SuccessFunding />}></Route>
       <Route path="/funding_ranking" element={<RankingFunding />}></Route>
       <Route path="/open_ranking" element={<OpenRanking />}></Route>
       <Route path="/bias_funding" element={<BiasFunding />}></Route>
-      <Route path="/bias_funding/:type" element={<MoreProjects />}></Route> */}
+      <Route path="/bias_funding/:type" element={<MoreProjects />}></Route> */
+  }
 
-      {/* 테스트 페이지 및 에러 페이지 */}
-      {/* <Route path="/test2" element={<TestPage />}></Route> */}
-      <Route path="*" element={<div>404 Error</div>}></Route>
+  {
+    /* 테스트 페이지 및 에러 페이지 */
+  }
+  {
+    /* <Route path="/test2" element={<TestPage />}></Route> */
+  }
+  {
+    /* <Route path="*" element={<div>404 Error</div>}></Route> */
+  }
 
-      {/* 홈 화면 */}
-      <Route path="/" element={<HomePage />} />
-    </Routes>
-  );
+  {
+    /* 홈 화면 */
+  }
+  {
+    /* <Route path="/" element={<HomePage />} /> */
+  }
+  {
+    /* </Routes> */
+  }
 }
 
 export default App;
