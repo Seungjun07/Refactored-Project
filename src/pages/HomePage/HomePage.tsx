@@ -1,46 +1,33 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-// import Banner from "../../component/Banner/Banner.js";
-// import NavBar from "../../component/NavBar/NavBar.js";
-// import AllPost from "../../component/AllPost/AllPost.js";
 import all_post from "@/img/all_post.png";
 import best from "@/img/best.png";
 import new_pin from "@/img/new_pin.png";
 
-// import FeedThumbnail from "../../component/feed-list/FeedThumbnail.js";
-import useFetchData from "../../hooks/useFetchData.ts";
-// import BiasBoxes from "../../component/BiasBoxes/BiasBoxes.js";
-// import SearchBox from "../../component/SearchBox.js";
 // import useTagStore from "../../stores/TagStore/useTagStore.js";
-// import useBiasStore from "../../stores/BiasStore/useBiasStore.js";
-// import postApi from "../../services/apis/postApi.js";
-// import GoogleAD from "../../component/display_google_ad.js";
-// import DisplayAds from "../../component/display_google_ad.js";
 import LoadingPage from "../LoadingPage/LoadingPage.js";
-import HEADER from "../../constant/header.js";
 import "@/App.css";
-import Header from "@/component/Header/Header.js";
-import SearchBox from "@/component/SearchBox.js";
-import Banner from "@/component/Banner/Banner.js";
-import BiasBoxes from "@/component/BiasBoxes/BiasBoxes.js";
-import FeedThumbnail from "@/component/feed-list/FeedThumbnail.js";
-import AllPost from "@/component/AllPost/AllPost.js";
-import NavBar from "@/component/NavBar/NavBar.js";
+import Header from "@/component/Header/Header.tsx";
+import SearchBox from "@/component/SearchBox.tsx";
+import Banner from "@/component/Banner/Banner.tsx";
+import BiasBoxes from "@/component/BiasBoxes/BiasBoxes.tsx";
+import FeedThumbnail from "@/component/feed-list/FeedThumbnail.tsx";
+import AllPost from "@/component/AllPost/AllPost.tsx";
+import NavBar from "@/component/NavBar/NavBar.tsx";
 import useBiasStore from "@/stores/BiasStore/useBiasStore.ts";
-import mainApi from "@/services/apis/mainApi.ts";
+import useFetchFeedData from "../../features/feed/hooks/useFetchFeedData.ts";
+import { useFetchFeedWithBias } from "@/features/feed/hooks/useFetchFeedWithBias.ts";
 
 // export function getModeClass(mode) {
 //   return mode === "dark" ? "dark-mode" : "bright-mode";
 // }
 
 export default function HomePage() {
-  let { data: todayBestFeed } = useFetchData(`/home/today_best`);
-  let { data: weeklyFeed } = useFetchData(`/home/weekly_best`);
-  let { data: allFeed } = useFetchData(`/home/all_feed`);
+  let { data: todayBestFeed } = useFetchFeedData(`/home/today_best`);
+  let { data: weeklyFeed } = useFetchFeedData(`/home/weekly_best`);
+  let { data: allFeed } = useFetchFeedData(`/home/all_feed`);
 
   let { biasId, biasList, setBiasId } = useBiasStore();
-  let [feedData, setFeedData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   let bids = biasList.map((item, i) => {
     return item.bid;
@@ -51,24 +38,9 @@ export default function HomePage() {
   //   }
   // }, [bids]);
 
-  async function fetchBiasCategoryData(bid) {
-    await mainApi
-      .post(`feed_explore/feed_with_community`, {
-        header: HEADER,
-        body: {
-          bid: biasId || bids?.[0] || "",
-          board: "자유게시판",
-          key: -1,
-        },
-      })
-      .then((res) => {
-        setFeedData(res.data.body.send_data);
-        setIsLoading(false);
-      });
-  }
+  const { feedData, isLoading, fetchBiasCategoryData } = useFetchFeedWithBias();
 
   useEffect(() => {
-    setFeedData([]);
     fetchBiasCategoryData();
   }, [biasId]);
 
