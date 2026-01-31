@@ -23,6 +23,50 @@ const mockFeeds = Array.from({ length: 30 }).map((_, i) => ({
 }));
 
 export const exploreHandlers = [
+  http.post(
+    `${BASE_URL}/feed_explore/feed_with_community`,
+    async ({ request }) => {
+      const body = await request.json();
+      console.log("POST body:", body);
+
+      return HttpResponse.json({
+        success: true,
+        body: {
+          send_data: mockFeeds,
+          nextkey: 0,
+        },
+      });
+    },
+  ),
+
+  http.get(
+    `${BASE_URL}/feed_explore/search_feed_with_hashtag`,
+    ({ request }) => {
+      console.log("MSW hashtag search: ");
+      const url = new URL(request.url);
+      const hashtag = url.searchParams.get("hashtag");
+      const targetTime = url.searchParams.get("target_time");
+      const key = Number(url.searchParams.get("key"));
+
+      const filteredFeeds = mockFeeds.filter((item) =>
+        item.feed.hashtag.some((tag) => tag.includes(hashtag ?? "")),
+      );
+      console.log(filteredFeeds);
+
+      const start = key * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+
+      const pageData = filteredFeeds.slice(start, end);
+
+      return HttpResponse.json({
+        body: {
+          send_data: pageData,
+          nextKey: 0,
+        },
+      });
+    },
+  ),
+
   http.get(`${BASE_URL}/feed_explore/:date_best`, ({ request, params }) => {
     const { date_best } = params;
 
@@ -34,7 +78,7 @@ export const exploreHandlers = [
 
     const pageData = mockFeeds.slice(start, end);
 
-    console.log("MSW HIT:", date_best, key);
+    // console.log("MSW HIT:", date_best, key);
 
     return HttpResponse.json({
       body: {

@@ -22,7 +22,7 @@ export async function fetchAllFeedList(nextData, filterCategory, filterFclass) {
 }
 
 // 태그 클릭 시 피드 받기
-export async function fetchFeedListWithTag(tag, time) {
+export async function fetchFeedListWithTag(tag: string, time: string) {
   const res = await mainApi.get(
     `feed_explore/search_feed_with_hashtag?hashtag=${tag}&key=-1&target_time=${time}`,
   );

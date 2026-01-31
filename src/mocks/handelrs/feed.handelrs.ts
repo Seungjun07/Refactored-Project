@@ -122,19 +122,4 @@ export const feedHandlers = [
       },
     });
   }),
-
-  http.post(
-    `${BASE_URL}/feed_explore/feed_with_community`,
-    async ({ request }) => {
-      const body = await request.json();
-      console.log("POST body:", body);
-
-      return HttpResponse.json({
-        success: true,
-        body: {
-          send_data: mockFeeds,
-        },
-      });
-    },
-  ),
 ];

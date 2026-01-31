@@ -40,8 +40,8 @@ export async function fetchFeedListByDate(type: string, nextData: number) {
 // 전체 피드 데이터 추가 받기
 export async function fetchAllFeedList(
   nextData: number,
-  filterCategory: string[],
-  filterFclass: string,
+  filterCategory?: string[],
+  filterFclass?: string,
 ) {
   const res = await mainApi.post(`feed_explore/all_feed`, {
     header: HEADER,
@@ -57,7 +57,7 @@ export async function fetchAllFeedList(
 // 태그 클릭 시 피드 받기
 export async function fetchFeedListWithTag(tag: string, time: string) {
   const res = await mainApi.get(
-    `feed_explore/search_feed_with_hashtag?hashtag=${tag}&key=-1&target_time=${time}`,
+    `feed_explore/search_feed_with_hashtag?hashtag=${tag}&key=0&target_time=${time}`,
   );
   return res.data;
 }
