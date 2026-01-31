@@ -1,6 +1,25 @@
 import { BASE_URL } from "@/services/apis/mainApi";
 import { http, HttpResponse } from "msw";
 
+const mockFeeds = Array.from({ length: 30 }).map((_, i) => ({
+  feed: {
+    fid: i + 1,
+    title: `Mock Feed ${i + 1}`,
+    body: `this is mock content ${i + 1}`,
+    bid: `${i + 1}`,
+    nickname: `${i}`,
+    date: "2026/01/30",
+    board: "자유게시판",
+    content: "테스트 내용입니다",
+    author: `사용자 ${i}`,
+    hashtag: [`test ${i}`],
+    createdAt: new Date().toISOString(),
+    star: 10,
+    star_flag: false,
+    num_comment: 5,
+  },
+}));
+
 export const feedHandlers = [
   http.get(`${BASE_URL}/home/today_best`, ({ request }) => {
     // 요청 헤더 확인 (디버깅용)
@@ -113,38 +132,7 @@ export const feedHandlers = [
       return HttpResponse.json({
         success: true,
         body: {
-          send_data: [
-            {
-              feed: {
-                id: 1,
-                bid: body.body.bid,
-                nickname: "hello",
-                board: "자유게시판",
-                title: "테스트 게시글 1",
-                content: "테스트 내용입니다",
-                author: "사용자1",
-                hashtag: [],
-                createdAt: new Date().toISOString(),
-                likes: 10,
-                comments: 5,
-              },
-            },
-            {
-              feed: {
-                id: 2,
-                bid: body.body.bid,
-                nickname: "hello",
-                board: "자유게시판",
-                title: "테스트 게시글 1",
-                content: "테스트 내용입니다",
-                hashtag: [],
-                author: "사용자1",
-                createdAt: new Date().toISOString(),
-                likes: 10,
-                comments: 5,
-              },
-            },
-          ],
+          send_data: mockFeeds,
         },
       });
     },
