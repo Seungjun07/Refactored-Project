@@ -32,13 +32,17 @@ export async function fetchFeedWithBiasId(payload: FeedRequest) {
 }
 
 // 주간, 오늘 피드 데이터
-export async function fetchDateFeedList(type, nextData = -1) {
-  const res = await mainApi.get(`feed_explore/${type}_best?key=${nextData}`);
+export async function fetchFeedListByDate(date: string, nextData: number) {
+  const res = await mainApi.get(`feed_explore/${date}_best?key=${nextData}`);
   return res.data;
 }
 
 // 전체 피드 데이터 추가 받기
-export async function fetchAllFeedList(nextData, filterCategory, filterFclass) {
+export async function fetchAllFeedList(
+  nextData: number,
+  filterCategory: string[],
+  filterFclass: string,
+) {
   const res = await mainApi.post(`feed_explore/all_feed`, {
     header: HEADER,
     body: {

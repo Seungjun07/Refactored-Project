@@ -30,6 +30,7 @@ import useIntersectionObserver from "../../hooks/useIntersectionObserver.js";
 import useFetchFeedList from "../../hooks/useFetchFeedList.js";
 import useBoardStore from "../../stores/BoardStore/useBoardStore.js";
 import Feed from "@/component/feed.js";
+import { useFeedListByDateQuery } from "@/features/feed/hooks/queries/useFeedListByDateQuery.js";
 // import MyPageLoading from "../LoadingPage/MypageLoading.js";
 
 export default function FeedPage() {
@@ -40,17 +41,17 @@ export default function FeedPage() {
 
   // 전역 상태 관리
   let { biasList, biasId, setBiasId } = useBiasStore();
+  const { board } = useBoardStore();
   // const { feedDatas, isLoadings, nextKey } = useFetchFeedList(type);
 
   // 드래그 기능
   const { scrollRef, hasDragged, dragHandlers } = useDragScroll();
-  const { board } = useBoardStore();
   let [isFilterClicked, setIsFilterClicked] = useState(false);
   let [isOpendCategory, setIsOpendCategory] = useState(false);
 
   let [isLoading, setIsLoading] = useState(true);
   let [feedData, setFeedData] = useState([]);
-  let [nextData, setNextData] = useState(-1);
+  let [nextData, setNextData] = useState(0);
 
   const [isSameTag, setIsSameTag] = useState(true);
   // let [biasId, setBiasId] = useState();
@@ -70,9 +71,9 @@ export default function FeedPage() {
   let [isClickedFetch, setIsClickedFetch] = useState(false);
 
   // 모드 체인지
-  useEffect(() => {
-    localStorage.setItem("brightMode", mode);
-  }, [mode]);
+  // useEffect(() => {
+  //   localStorage.setItem("brightMode", mode);
+  // }, [mode]);
 
   let bids = biasList.map((item) => {
     return item.bid;
@@ -99,12 +100,7 @@ export default function FeedPage() {
     // setIsLoading(true);
     const currentBid = bid || bids[0] || "";
 
-    const data = await fetchBiasFeedList(
-      currentBid,
-      bids,
-      board,
-      (nextData = -1),
-    );
+    const data = await fetchBiasFeedList(currentBid, bids, board, nextData);
     setFeedData(data.body.send_data);
     setNextData(data.body.key);
     setHasMore(data.body.send_data.length > 0);
@@ -161,10 +157,11 @@ export default function FeedPage() {
     }
   }
 
+  const { data: fetchFeedListByDate } = useFeedListByDateQuery(type ?? "");
   // 오늘, 주간 피드 받기
   async function fetchData() {
     if (type === "today" || type === "weekly") {
-      const data = await fetchDateFeedList(type);
+      const data = await fetchDateFeedList(type, nextData);
       setFeedData(data.body.send_data);
       setNextData(data.body.key);
       setIsLoading(false);
@@ -258,11 +255,11 @@ export default function FeedPage() {
     setIsFilterClicked(!isFilterClicked);
   }
 
-  if (isFilterClicked) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "auto";
-  }
+  // if (isFilterClicked) {
+  //   document.body.style.overflow = "hidden";
+  // } else {
+  //   document.body.style.overflow = "auto";
+  // }
 
   return (
     <div className={`all-box ${style["all_container"]}`}>
