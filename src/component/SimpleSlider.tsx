@@ -76,7 +76,7 @@ const SimpleSlider = ({ feedData, brightMode, type, className }) => {
     >
       <Slider {...settings}>
         {feedData.length > 0 &&
-          feedData.map((feed, i) => {
+          feedData.slice(0, 5).map((feed, i) => {
             return (
               <div key={i} className="slick-slide">
                 <div className="slide-box">

@@ -18,7 +18,7 @@ export function useFetchFeedWithBias() {
     const data = await fetchFeedWithBiasId({
       bid: bid || biasId || bids?.[0] || "",
       board: "자유게시판",
-      key: -1,
+      key: 0,
     });
 
     setFeedData(data.body.send_data);

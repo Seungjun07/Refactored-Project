@@ -34,7 +34,7 @@ export async function fetchBiasFeedList(bid, bids, board, nextData) {
   let bodyData = {
     bid: bid || bids?.[0] || "",
     board: board || "",
-    key: nextData || -1,
+    key: nextData,
   };
 
   const res = await postApi.post(`feed_explore/feed_with_community`, {
