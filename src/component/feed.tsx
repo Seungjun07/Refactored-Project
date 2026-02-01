@@ -11,8 +11,15 @@ import comment from "./../img/comment.png";
 import postApi from "../services/apis/postApi";
 import HEADER from "../constant/header";
 import mainApi from "../services/apis/mainApi";
-import useDragScroll from "../hooks/useDragScroll";
+import useDragScroll from "../hooks/useDragScroll.ts";
 import useFeedActions from "../hooks/useFeedActions";
+import LikeStarButton from "./Interaction/LikeStarButton";
+import ReportButton from "./Interaction/ReportButton";
+import { useLinkPreview } from "@/features/feed/hooks/useLinkPreview";
+import LinkPreview from "@/features/feed/components/Feed/LinkPreview";
+import FeedActions from "@/features/feed/components/Feed/FeedActions";
+import FeedImage from "@/features/feed/components/Feed/FeedImage.tsx";
+import FeedBody from "@/features/feed/components/Feed/FeedBody.tsx";
 
 // export function useBrightMode() {
 //   const params = new URLSearchParams(window.location.search);
@@ -32,7 +39,7 @@ import useFeedActions from "../hooks/useFeedActions";
 const header = HEADER;
 
 export default function Feed({ feed, setFeedData, type }) {
-  const { handleCheckStar } = useFeedActions(setFeedData, type);
+  // const { handleCheckStar } = useFeedActions(setFeedData, type);
 
   const [report, setReport] = useState();
 
@@ -50,7 +57,7 @@ export default function Feed({ feed, setFeedData, type }) {
     <>
       <ContentFeed
         feed={feed}
-        handleCheckStar={handleCheckStar}
+        // handleCheckStar={handleCheckStar}
         fetchReportResult={fetchReportResult}
       />
     </>
@@ -71,7 +78,7 @@ export function ContentFeed({
     await mainApi
       .get(`feed_explore/original_feed_data?fid=${fid}`)
       .then((res) => {
-        console.log("done");
+        console.log("done", res);
       });
   }
 
@@ -91,22 +98,29 @@ export function ContentFeed({
         });
       }}
     >
-      <FeedHeader date={feed.date} nickname={feed.nickname} />
-      <AIFilter
+      <div className={style["user-container"]}>
+        <div>{feed.date}</div>
+        <div>{feed.nickname}</div>
+      </div>
+
+      {/* <AIFilter
         isReworked={feed.is_reworked}
         fid={feed.fid}
         fetchOriginalText={fetchOriginalText}
-      />
+      /> */}
 
       <div
         className={`${style["body-container"]} ${detailPage ? "" : style["long-form-hidden"]}`}
       >
         <HashTags hashtags={feed.hashtag} />
 
-        {feed.fclass === "short" && (
+        <FeedBody feed={feed} />
+        {/* {feed.fclass === "short" && (
           <div className={style["body-content"]}>{feed.body}</div>
         )}
-        {feed.image?.length > 0 && feed.fclass === "short" ? (
+        {feed.fclass === "long" && <Viewer initialValue={feed.raw_body} />} */}
+        <FeedImage images={feed.image} variant="short" />
+        {/* {feed.image?.length > 0 && feed.fclass === "short" ? (
           <div className={style["image-container"]}>
             <div
               ref={scrollRef}
@@ -124,56 +138,55 @@ export function ContentFeed({
               )}
             </div>
           </div>
-        ) : null}
-
-        {feed.fclass === "long" && <Viewer initialValue={feed.raw_body} />}
+        ) : null} */}
       </div>
 
       {links && <LinkSection links={links} />}
 
-      <ActionButtons
+      <FeedActions feed={feed} />
+      {/* <ActionButtons
         feed={feed}
-        handleCheckStar={handleCheckStar}
+        // handleCheckStar={handleCheckStar}
         fetchReportResult={fetchReportResult}
-      />
+      /> */}
     </div>
   );
 }
 
 // 피드 날짜 및 작성자
-function FeedHeader({ date, nickname }) {
-  return (
-    <div className={style["user-container"]}>
-      <div>{date}</div>
-      <div>{nickname}</div>
-    </div>
-  );
-}
+// function FeedHeader({ date, nickname }) {
+//   return (
+//     <div className={style["user-container"]}>
+//       <div>{date}</div>
+//       <div>{nickname}</div>
+//     </div>
+//   );
+// }
 
-function AIFilter({ isReworked, fid, fetchOriginalText }) {
-  if (!isReworked) {
-    return null;
-  }
-  return (
-    <div className={style["AI_container"]}>
-      <div className={style["AI_text_info"]}>
-        <span>
-          <img src={info_icon} alt="info" />
-        </span>
-        본 게시글의 본문은 AI에 의해 필터링 되었습니다.
-      </div>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          fetchOriginalText(fid);
-        }}
-      >
-        원문 보기
-      </button>
-    </div>
-  );
-}
+// function AIFilter({ isReworked, fid, fetchOriginalText }) {
+//   if (!isReworked) {
+//     return null;
+//   }
+//   return (
+//     <div className={style["AI_container"]}>
+//       <div className={style["AI_text_info"]}>
+//         <span>
+//           <img src={info_icon} alt="info" />
+//         </span>
+//         본 게시글의 본문은 AI에 의해 필터링 되었습니다.
+//       </div>
+//       <button
+//         onClick={(e) => {
+//           e.preventDefault();
+//           e.stopPropagation();
+//           fetchOriginalText(fid);
+//         }}
+//       >
+//         원문 보기
+//       </button>
+//     </div>
+//   );
+// }
 
 // 해시 태그
 function HashTags({ hashtags }) {
@@ -191,80 +204,65 @@ function HashTags({ hashtags }) {
   );
 }
 
-function ActionButtons({ feed, handleCheckStar, fetchReportResult }) {
-  const navigate = useNavigate();
+// function ActionButtons({ feed, fetchReportResult }) {
+//   const navigate = useNavigate();
 
-  return (
-    <div className={style["button-container"]}>
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-          fetchReportResult(feed.fid);
-        }}
-      >
-        신고
-      </div>
-      <div className={style["button-box1"]}>
-        <div className={style["action-button"]}>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCheckStar(feed.fid, e);
-            }}
-          >
-            <img src={feed.star_flag ? star_color : star} alt="star-icon" />
-          </button>
-          <span>{feed.star}</span>
-        </div>
+//   return (
+//     <div className={style["button-container"]}>
+//       <ReportButton />
 
-        <div className={style["action-button"]}>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/feed_detail/${feed.fid}`, {
-                state: { commentClick: true },
-              });
-            }}
-          >
-            <img src={comment} alt="comment-icon" />
-          </button>
-          <span>{feed.num_comment}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
+//       <div className={style["button-box1"]}>
+//         <div className={style["action-button"]}>
+//           <LikeStarButton
+//             fid={feed.fid}
+//             isLiked={feed.star_flag}
+//             likeCount={feed.star}
+//           />
+//         </div>
+
+//         <div className={style["action-button"]}>
+//           <button
+//             onClick={(e) => {
+//               e.stopPropagation();
+//               navigate(`/feed_detail/${feed.fid}`, {
+//                 state: { commentClick: true },
+//               });
+//             }}
+//           >
+//             <img src={comment} alt="comment-icon" />
+//             <span>{feed.num_comment}</span>
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 
 function LinkSection({ links }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [linkImage, setLinkImage] = useState([]);
-
-  async function fetchImageTag() {
-    for (const item of links)
-      await postApi
-        .post("nova_sub_system/image_tag", {
-          header: HEADER,
-          body: {
-            url: item.url,
-          },
-        })
-        .then((res) => {
-          setLinkImage((prev) => [...prev, res.data.body.image]);
-          //console.log(res.data);
-        });
-    setIsLoading(false);
-  }
+  const { images, fetchImages } = useLinkPreview(links);
+  // async function fetchImageTag() {
+  //   for (const item of links)
+  //     await postApi
+  //       .post("nova_sub_system/image_tag", {
+  //         header: HEADER,
+  //         body: {
+  //           url: item.url,
+  //         },
+  //       })
+  //       .then((res) => {
+  //         setLinkImage((prev) => [...prev, res.data.body.image]);
+  //         console.log(res.data);
+  //       });
+  //   setIsLoading(false);
+  // }
 
   useEffect(() => {
     if (links) {
-      fetchImageTag();
+      fetchImages();
     }
     setIsLoading(false);
   }, [links]);
-
-  function onClickLink(url) {
-    window.open(url, "_blank", "noopener, noreferrer");
-  }
 
   if (isLoading) {
     return <div>loading...</div>;
@@ -277,35 +275,9 @@ function LinkSection({ links }) {
           <p>안전을 위해 신뢰할 수 있는 사이트에만 접속하세요.</p>
         </div>
       )}
-      {links &&
-        links.map((link, i) => {
-          return (
-            <div key={link.lid} className={style["Link_Container"]}>
-              <div
-                className={style["Link_box"]}
-                onClick={() => {
-                  onClickLink(link.url);
-                }}
-              >
-                <div className={style["Link_thumbnail"]}>
-                  <img src={linkImage[i]} alt="thumbnail" />
-                </div>
-
-                <div className={style["Link_info"]}>
-                  <div className={style["Link_title"]}>{link.title}</div>
-                  <div className={style["Link_domain"]}>{link.domain}</div>
-                </div>
-              </div>
-
-              <div className={style["Link_explain"]}>
-                <span>
-                  <img src={link_pin_icon} alt="pin" />
-                </span>
-                <span>{link.explain}</span>
-              </div>
-            </div>
-          );
-        })}
+      {links.map((link, idx) => (
+        <LinkPreview key={link.lid} link={link} image={images[idx]} />
+      ))}
     </>
   );
 }

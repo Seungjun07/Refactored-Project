@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useDragScroll from "../../hooks/useDragScroll";
+import useDragScroll from "../../hooks/useDragScroll.ts";
 import mainApi from "../../services/apis/mainApi";
 import style from "./KeywordBox.module.css";
 

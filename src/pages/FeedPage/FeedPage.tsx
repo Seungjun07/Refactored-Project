@@ -25,6 +25,8 @@ import useBoardStore from "../../stores/BoardStore/useBoardStore.js";
 import Feed from "@/component/feed.js";
 import { useFeedListByDateQuery } from "@/features/feed/hooks/queries/useFeedListByDateQuery.js";
 import { useFeedData } from "@/features/feed/hooks/useFeedData.js";
+import FeedList from "@/features/feed/components/FeedList.js";
+import FeedItem from "@/features/feed/components/Feed/FeedItem.js";
 // import MyPageLoading from "../LoadingPage/MypageLoading.js";
 
 export default function FeedPage() {
@@ -50,7 +52,7 @@ export default function FeedPage() {
   let [isOpendCategory, setIsOpendCategory] = useState(false);
 
   // let [isLoading, setIsLoading] = useState(true);
-  let [feedDatas, setFeedData] = useState([]);
+  // let [feedDatas, setFeedData] = useState([]);
   let [nextData, setNextData] = useState(0);
 
   const [isSameTag, setIsSameTag] = useState(true);
@@ -107,21 +109,22 @@ export default function FeedPage() {
     isLoading,
     hasMore,
     fetchFeed,
+    setFeedData,
     fetchFeedWithTag,
     fetchBiasFeed,
     resetFeed,
   } = useFeedData({ type, filterCategory, filterFclass });
 
-  useEffect(() => {
-    if (!type) return;
-    resetFeed();
+  // useEffect(() => {
+  //   if (!type) return;
+  //   resetFeed();
 
-    if (type === "bias") {
-      fetchBiasFeed(biasId);
-    } else {
-      fetchFeed();
-    }
-  }, [type]);
+  //   if (type === "bias") {
+  //     fetchBiasFeed(biasId);
+  //   } else {
+  //     fetchFeed();
+  //   }
+  // }, [type]);
 
   // useEffect(() => {
   //   if (isSameTag) {
@@ -135,22 +138,22 @@ export default function FeedPage() {
     fetchFeedWithTag(tag);
   }
 
-  const loadMoreCallBack = () => {
-    if (!isLoading && hasMore) {
-      if (type === "bias") {
-        fetchBiasFeed(biasId);
-      } else {
-        fetchFeed();
-      }
-    }
-  };
+  // const loadMoreCallBack = () => {
+  //   if (!isLoading && hasMore) {
+  //     if (type === "bias") {
+  //       fetchBiasFeed(biasId);
+  //     } else {
+  //       fetchFeed();
+  //     }
+  //   }
+  // };
 
-  // 무한 스크롤
-  const targetRef = useIntersectionObserver(
-    loadMoreCallBack,
-    { threshold: 0.5 },
-    hasMore,
-  );
+  // // 무한 스크롤
+  // const targetRef = useIntersectionObserver(
+  //   loadMoreCallBack,
+  //   { threshold: 0.5 },
+  //   hasMore,
+  // );
 
   // 모달 창 - 전체 피드 목록
   function onClickCategory() {
@@ -256,24 +259,29 @@ export default function FeedPage() {
               : style["none_feed_scroll"]
           }
         >
-          {isLoading ? (
+          <FeedList type={type} />
+          {/* {isLoading ? (
             <></>
           ) : // <MyPageLoading />
           feedData.length > 0 ? (
             feedData.map((feed, i) => {
               return (
-                <Feed
-                  key={`feed_${feed.feed.fid}`}
-                  className={`${style["feed-box"]} ${style[getModeClass(mode)]}`}
+                <FeedItem
+                  key={feed.feed.fid}
                   feed={feed.feed}
-                  setFeedData={setFeedData}
-                ></Feed>
+                  links={feed.feed.links}
+                />
+                // <Feed
+                //   key={`feed_${feed.feed.fid}`}
+                //   className={`${style["feed-box"]} ${style[getModeClass(mode)]}`}
+                //   feed={feed.feed}
+                // ></Feed>
               );
             })
           ) : (
             <NoneFeed />
-          )}
-          <div ref={targetRef} style={{ height: "1px" }}></div>
+          )} */}
+          {/* <div ref={targetRef} style={{ height: "1px" }}></div> */}
           {/* {isFilterClicked && (
             <FilterModal
               onClickFilterButton={onClickFilterButton}

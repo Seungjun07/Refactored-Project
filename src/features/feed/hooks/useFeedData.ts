@@ -3,11 +3,13 @@ import {
   fetchAllFeedList,
   fetchFeedListByDate,
   fetchFeedListWithTag,
+  fetchFeedStar,
   fetchFeedWithBiasId,
 } from "../api/feed";
+import type { Feed, FeedType } from "../types/feed";
 
 interface UseFeedDataParams {
-  type: "today" | "weekly" | "all" | "bias" | null;
+  type?: "today" | "weekly" | "all" | "bias" | null;
   filterCategory?: string[];
   filterFclass?: string;
   biasId?: string;
@@ -23,7 +25,7 @@ export function useFeedData({
   bids = [],
   board = "",
 }: UseFeedDataParams) {
-  const [feedData, setFeedData] = useState([]);
+  const [feedData, setFeedData] = useState<Feed[]>([]);
   const [nextKey, setNextKey] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -62,12 +64,6 @@ export function useFeedData({
 
     if (!time) return;
 
-    // if (type === "today") {
-    //   time = "day";
-    // } else if (type === "weekly") {
-    //   time = "weekly";
-    // }
-
     const data = await fetchFeedListWithTag(tag, time);
     setFeedData(data.body.send_data);
     setNextKey(data.body.key);
@@ -92,6 +88,27 @@ export function useFeedData({
     setIsLoading(false);
   }
 
+  async function handleToggleLike(fid: string) {
+    const data = await fetchFeedStar(fid);
+
+    const updatedFeed = data.send_data.feed;
+
+    setFeedData((prev) =>
+      prev.map((feed) =>
+        feed.fid === fid
+          ? {
+              ...feed,
+              feed: {
+                ...feed,
+                star: updatedFeed.star,
+                star_flag: updatedFeed.star_flag,
+              },
+            }
+          : feed,
+      ),
+    );
+  }
+
   function resetFeed() {
     setFeedData([]);
     setNextKey(0);
@@ -103,9 +120,11 @@ export function useFeedData({
     nextKey,
     hasMore,
     isLoading,
+    setFeedData,
     fetchFeed,
     fetchFeedWithTag,
     fetchBiasFeed,
+    handleToggleLike,
     resetFeed,
   };
 }

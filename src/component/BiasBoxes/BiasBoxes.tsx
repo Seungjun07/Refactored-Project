@@ -4,7 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 import { BIAS_URL } from "../../constant/biasUrl";
 import useLoginStore from "../../stores/LoginStore/useLoginStore";
-import useDragScroll from "../../hooks/useDragScroll";
+import useDragScroll from "../../hooks/useDragScroll.ts";
 import add_bias_icon from "./../../img/add_bias.png";
 import tempBias from "./../../img/tempBias.png";
 
