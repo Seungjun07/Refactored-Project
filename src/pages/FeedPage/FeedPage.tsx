@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import {
-  fetchAllFeedList,
-  fetchDateFeedList,
-  fetchFeedListWithTag,
-  fetchBiasFeedList,
-} from "../../services/getFeedApi.js";
 import useBiasStore from "../../stores/BiasStore/useBiasStore.js";
 
 import { getModeClass } from "../../App.js";
@@ -27,30 +21,36 @@ import style from "./FeedHashList.module.css";
 import useDragScroll from "../../hooks/useDragScroll.js";
 import LoadingPage from "../LoadingPage/LoadingPage.js";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver.js";
-import useFetchFeedList from "../../hooks/useFetchFeedList.js";
 import useBoardStore from "../../stores/BoardStore/useBoardStore.js";
 import Feed from "@/component/feed.js";
 import { useFeedListByDateQuery } from "@/features/feed/hooks/queries/useFeedListByDateQuery.js";
+import { useFeedData } from "@/features/feed/hooks/useFeedData.js";
 // import MyPageLoading from "../LoadingPage/MypageLoading.js";
 
 export default function FeedPage() {
   // url 파라미터 가져오기
   const [params] = useSearchParams();
-  const type = params.get("type");
-  const brightModeFromUrl = params.get("brightMode");
 
+  const brightModeFromUrl = params.get("brightMode");
+  const FEED_TYPES = ["today", "weekly", "all", "bias"] as const;
+  type FeedType = (typeof FEED_TYPES)[number];
+
+  const rawType = params.get("type");
+
+  const type: FeedType | null = FEED_TYPES.includes(rawType as FeedType)
+    ? (rawType as FeedType)
+    : null;
   // 전역 상태 관리
   let { biasList, biasId, setBiasId } = useBiasStore();
   const { board } = useBoardStore();
-  // const { feedDatas, isLoadings, nextKey } = useFetchFeedList(type);
 
   // 드래그 기능
   const { scrollRef, hasDragged, dragHandlers } = useDragScroll();
   let [isFilterClicked, setIsFilterClicked] = useState(false);
   let [isOpendCategory, setIsOpendCategory] = useState(false);
 
-  let [isLoading, setIsLoading] = useState(true);
-  let [feedData, setFeedData] = useState([]);
+  // let [isLoading, setIsLoading] = useState(true);
+  let [feedDatas, setFeedData] = useState([]);
   let [nextData, setNextData] = useState(0);
 
   const [isSameTag, setIsSameTag] = useState(true);
@@ -60,7 +60,7 @@ export default function FeedPage() {
     brightModeFromUrl || localStorage.getItem("brightMode") || "bright"; // URL에서 가져오고, 없으면 로컬 스토리지에서 가져옴
   const [mode, setMode] = useState(initialMode);
 
-  const [hasMore, setHasMore] = useState(true);
+  // const [hasMore, setHasMore] = useState(true);
 
   let [filterCategory, setFilterCategory] = useState(
     JSON.parse(localStorage.getItem("board")) || [""],
@@ -68,12 +68,6 @@ export default function FeedPage() {
   let [filterFclass, setFilterFclass] = useState(
     JSON.parse(localStorage.getItem("content")) || "",
   );
-  let [isClickedFetch, setIsClickedFetch] = useState(false);
-
-  // 모드 체인지
-  // useEffect(() => {
-  //   localStorage.setItem("brightMode", mode);
-  // }, [mode]);
 
   let bids = biasList.map((item) => {
     return item.bid;
@@ -85,153 +79,72 @@ export default function FeedPage() {
     }
   }, [bids]);
 
-  const loadMoreCallBack = () => {
-    if (!isLoading && hasMore) {
-      if (type === "bias") {
-        fetchBiasPlusCategoryData();
-      } else {
-        fetchPlusData();
-      }
-    }
-  };
-
-  // 주제별 피드 리스트
-  async function fetchBiasCategoryData(bid) {
-    // setIsLoading(true);
-    const currentBid = bid || bids[0] || "";
-
-    const data = await fetchBiasFeedList(currentBid, bids, board, nextData);
-    setFeedData(data.body.send_data);
-    setNextData(data.body.key);
-    setHasMore(data.body.send_data.length > 0);
-    setIsLoading(false);
-  }
-
-  async function fetchBiasPlusCategoryData() {
-    // setIsLoading(true);
-    const data = await fetchBiasFeedList(biasId, bids, board, nextData);
-    setFeedData((prevData) => [...prevData, ...data.body.send_data]);
-    setNextData(data.body.key);
-    setHasMore(data.body.send_data.length > 0);
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    if (type === "bias") {
-      fetchBiasCategoryData(biasId);
-    }
-  }, [biasId, board]);
-
-  useEffect(() => {
-    setFeedData([]);
-    setNextData(-1);
-  }, [biasId, board, type]);
-
   function onClickApplyButton1() {
     setNextData(-1);
   }
 
-  async function fetchAllFeed(clickedFetch) {
-    let updatedNextData = -1;
-
+  async function fetchAllFeed() {
+    // let updatedNextData = 0;
     //  만약 적용 버튼을 누르면 -1로 세팅
-    if (clickedFetch) {
-      updatedNextData = -1;
-      setNextData(-1);
-    }
+    // if (clickedFetch) {
+    //   updatedNextData = -1;
+    //   setNextData(-1);
+    // }
     // 그게 아닌 상황에서는 기존의 nextData 를 사용
-    else {
-      updatedNextData = nextData;
-    }
-
-    if (type === "all" || isClickedFetch) {
-      const data = await fetchAllFeedList(
-        updatedNextData,
-        filterCategory,
-        filterFclass,
-      );
-      setFeedData(data.body.send_data);
-      setNextData(data.body.key);
-      setHasMore(data.body.send_data.length > 0);
-      setIsLoading(false);
-    }
+    // else {
+    //   updatedNextData = nextData;
+    // }
+    // const data = await fetchAllFeedList(nextData, filterCategory, filterFclass);
+    // setFeedData(data.body.send_data);
+    // setNextData(data.body.key);
+    // setHasMore(data.body.send_data.length > 0);
+    // setIsLoading(false);
   }
 
-  const { data: fetchFeedListByDate } = useFeedListByDateQuery(type ?? "");
-  // 오늘, 주간 피드 받기
-  async function fetchData() {
-    if (type === "today" || type === "weekly") {
-      const data = await fetchDateFeedList(type, nextData);
-      setFeedData(data.body.send_data);
-      setNextData(data.body.key);
-      setIsLoading(false);
-    } else if (type === "all") {
-      fetchAllFeed(false);
-    }
-  }
-
-  // 태그 클릭 시 데이터 받기
-  async function fetchFeedWithTag(tag) {
-    let time;
-    if (type === "today") {
-      time = "day";
-    } else if (type === "weekly") {
-      time = "weekly";
-    }
-    const data = await fetchFeedListWithTag(tag, time);
-    setFeedData(data.body.send_data);
-    setIsLoading(false);
-  }
+  const {
+    feedData,
+    nextKey,
+    isLoading,
+    hasMore,
+    fetchFeed,
+    fetchFeedWithTag,
+    fetchBiasFeed,
+    resetFeed,
+  } = useFeedData({ type, filterCategory, filterFclass });
 
   useEffect(() => {
-    if (isSameTag) {
-      setHasMore(true);
-    } else {
-      setHasMore(false);
-    }
-  }, [isSameTag]);
+    if (!type) return;
+    resetFeed();
 
-  function onClickTag(tag) {
+    if (type === "bias") {
+      fetchBiasFeed(biasId);
+    } else {
+      fetchFeed();
+    }
+  }, [type]);
+
+  // useEffect(() => {
+  //   if (isSameTag) {
+  //     setHasMore(true);
+  //   } else {
+  //     setHasMore(false);
+  //   }
+  // }, [isSameTag]);
+
+  function onClickTag(tag: string) {
     fetchFeedWithTag(tag);
   }
 
-  // 데이터 더 받기
-  async function fetchFeedListType(
-    fetchFunction,
-    type,
-    nextData,
-    filterCategory,
-    filterFclass,
-  ) {
-    const data = await fetchFunction(
-      type,
-      nextData,
-      filterCategory,
-      filterFclass,
-    );
-
-    setFeedData((prevData) => {
-      const newData = [...prevData, ...data.body.send_data];
-      return newData;
-    });
-    setNextData(data.body.key);
-    setIsLoading(false);
-    setHasMore(data.body.send_data.length > 0);
-  }
-
-  // 데이터 더 받기
-  async function fetchPlusData() {
-    if (type === "today" || type === "weekly") {
-      await fetchFeedListType(fetchDateFeedList, type, nextData);
-    } else if (type === "all" || isClickedFetch) {
-      await fetchFeedListType(
-        fetchAllFeedList,
-        nextData,
-        filterCategory,
-        filterFclass,
-      );
+  const loadMoreCallBack = () => {
+    if (!isLoading && hasMore) {
+      if (type === "bias") {
+        fetchBiasFeed(biasId);
+      } else {
+        fetchFeed();
+      }
     }
-  }
+  };
+
   // 무한 스크롤
   const targetRef = useIntersectionObserver(
     loadMoreCallBack,
@@ -239,14 +152,7 @@ export default function FeedPage() {
     hasMore,
   );
 
-  useEffect(() => {
-    fetchData();
-
-    return () => {
-      setFeedData([]);
-    };
-  }, []);
-
+  // 모달 창 - 전체 피드 목록
   function onClickCategory() {
     setIsOpendCategory(!isOpendCategory);
   }
@@ -260,6 +166,13 @@ export default function FeedPage() {
   // } else {
   //   document.body.style.overflow = "auto";
   // }
+  function TopSectionByType() {
+    if (type === "bias") return;
+    if (type === "all") return;
+    if (type === "today" || type === "weekly") return;
+
+    return null;
+  }
 
   return (
     <div className={`all-box ${style["all_container"]}`}>
@@ -269,7 +182,7 @@ export default function FeedPage() {
           <div className={style["bias-section"]}>
             <BiasBoxes
               setBiasId={setBiasId}
-              fetchBiasCategoryData={fetchBiasCategoryData}
+              fetchBiasCategoryData={fetchBiasFeed}
             />
             <h4>게시글 미리보기</h4>
             <div
@@ -330,8 +243,7 @@ export default function FeedPage() {
               title={type === "today" ? "인기 급상승" : "많은 사랑을 받은"}
               subTitle={type === "today" ? "오늘의 키워드" : "이번주 키워드"}
               onClickTagButton={onClickTag}
-              fetchData={fetchData}
-              setHasMore={setHasMore}
+              fetchData={fetchFeed}
               setIsSameTag={setIsSameTag}
             />
           </div>

@@ -3,6 +3,10 @@ import { http, HttpResponse } from "msw";
 
 const PAGE_SIZE = 10;
 
+type FeedRequestBody = {
+  key: number;
+};
+
 const mockFeeds = Array.from({ length: 30 }).map((_, i) => ({
   feed: {
     fid: i + 1,
@@ -26,14 +30,20 @@ export const exploreHandlers = [
   http.post(
     `${BASE_URL}/feed_explore/feed_with_community`,
     async ({ request }) => {
-      const body = await request.json();
+      const body = (await request.json()) as FeedRequestBody;
       console.log("POST body:", body);
+
+      const { key } = body;
+      const start = key * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+
+      const pageData = mockFeeds.slice(start, end);
 
       return HttpResponse.json({
         success: true,
         body: {
           send_data: mockFeeds,
-          nextkey: 0,
+          nextkey: key + 1,
         },
       });
     },
