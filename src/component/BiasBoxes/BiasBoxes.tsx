@@ -33,38 +33,39 @@ export default function BiasBoxes({ fetchBiasCategoryData }) {
     setClickedBias(i);
   }
 
-  let [isUserState, setIsUserState] = useState(false);
-  function handleValidCheck() {
-    fetch("https://nova-platform.kr/home/is_valid", {
-      credentials: "include",
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          setIsUserState(true);
-          return response.json();
-        } else {
-          setIsUserState(false);
-          return Promise.reject();
-        }
-      })
-      .catch((error) => {
-        setIsUserState(false);
-      });
-  }
+  // let [isUserState, setIsUserState] = useState(false);
+  // function handleValidCheck() {
+  //   fetch("https://nova-platform.kr/home/is_valid", {
+  //     credentials: "include",
+  //   })
+  //     .then((response) => {
+  //       if (response.status === 200) {
+  //         setIsUserState(true);
+  //         return response.json();
+  //       } else {
+  //         setIsUserState(false);
+  //         return Promise.reject();
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setIsUserState(false);
+  //     });
+  // }
 
-  useEffect(() => {
-    handleValidCheck();
-  }, []);
+  // useEffect(() => {
+  //   handleValidCheck();
+  // }, []);
 
   const defaultBoxes = 1;
   const totalBiasBoxes = Math.max(defaultBoxes, biasList.length);
 
   function onClickAddButton() {
-    if (isUserState) {
-      navigate("/follow_page");
-    } else {
-      navigate("/novalogin");
-    }
+    navigate("/follow_page");
+    // if (isUserState) {
+    //   navigate("/follow_page");
+    // } else {
+    //   navigate("/novalogin");
+    // }
   }
 
   useEffect(() => {

@@ -124,7 +124,7 @@ export default function FeedPage() {
     } else {
       fetchFeed();
     }
-  }, [type]);
+  }, [type, biasId]);
 
   // useEffect(() => {
   //   if (isSameTag) {

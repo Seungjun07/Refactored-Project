@@ -3,8 +3,9 @@ import ReportButton from "@/component/Interaction/ReportButton";
 import style from "@/pages/FeedPage/FeedPage.module.css";
 import { useNavigate } from "react-router-dom";
 import comment from "@/img/comment.png";
+import type { Feed, FeedType } from "../../types/feed";
 
-export default function FeedActions({ feed }) {
+export default function FeedActions({ feed }: { feed: FeedType }) {
   const navigate = useNavigate();
 
   function handleNavigate(fid: string) {

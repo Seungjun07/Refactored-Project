@@ -4,7 +4,7 @@ export default function StoryFeed({ feedData, type, hasDragged }) {
   let navigate = useNavigate();
 
   function onClickFeed(fid) {
-    navigate(`/feed_detail/${fid}`, { state: { commentClick: false } });
+    navigate(`/feed/${fid}`, { state: { commentClick: false } });
   }
 
   if (!feedData) {

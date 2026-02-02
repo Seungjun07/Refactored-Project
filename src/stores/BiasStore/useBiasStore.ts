@@ -1,13 +1,21 @@
 import { getBiasList } from "@/features/bias/api/bias";
 import { create } from "zustand";
 
-const useBiasStore = create((set) => ({
+interface BiasStoreState {
+  biasList: [];
+  loading: boolean;
+  error: string | null;
+  biasId: string;
+  setBiasId: (id: string) => void;
+}
+
+const useBiasStore = create<BiasStoreState>((set) => ({
   biasList: [],
   loading: false,
   error: null,
   biasId: "",
 
-  setBiasId: (bid) => set({ biasId: bid }),
+  setBiasId: (id) => set({ biasId: id }),
 
   fetchBiasList: async () => {
     set({ loading: true, error: null });
