@@ -1,14 +1,8 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
-
-import mainApi from "../../services/apis/mainApi";
-import postApi from "../../services/apis/postApi";
-
-import HEADER from "../../constant/header";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState, type MouseEvent } from "react";
 
 import more_icon from "./../../img/more_icon.svg";
 import back from "./../../img/detail_back.png";
-import input from "./../../img/input.svg";
 import reArrow1 from "./../../img/reArrow1.svg";
 import reArrow2 from "./../../img/reArrow2.svg";
 import reArrow3 from "./../../img/reArrow3.svg";
@@ -17,142 +11,34 @@ import reArrow4 from "./../../img/reArrow4.svg";
 import style from "./FeedDetail.module.css";
 import FeedItem from "@/features/feed/components/Feed/FeedItem";
 import { useFeedDetail } from "@/features/feed/hooks/useFeedDetail";
+import { useFeedData } from "@/features/feed/hooks/useFeedData";
+import CommentSection from "@/features/comment/components/CommentSection";
 
 export default function FeedDetailPage() {
   let navigate = useNavigate();
   const params = useParams<{ fid: string }>();
   const fid = params.fid!;
 
-  let location = useLocation();
-  let { state } = location;
-
-  let commentRef = useRef(null);
-
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 관리
-  const [isComment, setIsComment] = useState(false);
-  let [comments, setComments] = useState([]);
-  let [commentValue, setCommentValue] = useState("");
-  let [commentId, setCommentId] = useState("");
-  const [showMoreOption, setShowMoreOption] = useState(false);
-  const [links, setLinks] = useState([]);
-
-  useEffect(() => {
-    if (!isLoading && commentRef.current && state.commentClick) {
-      commentRef.current.focus();
-    }
-  }, [isLoading]);
-
   const { feed } = useFeedDetail(fid);
+  const { removeFeed } = useFeedData({ type: null });
 
-  if (!feed) return <div>로딩중</div>;
+  const [showMoreOption, setShowMoreOption] = useState(false);
 
-  // async function fetchFeed() {
-  //   await mainApi
-  //     .get(`feed_explore/feed_detail/feed_data?fid=${fid}`)
-  //     .then((res) => {
-  //       setFeedData(res.data.body.feed[0]);
-  //       setLinks(res.data.body.links);
-  //       setIsLoading(false);
-  //       setIsComment(false);
-  //     });
-  // }
-
-  // async function fetchFeedComment() {
-  //   await mainApi
-  //     .get(`feed_explore/feed_detail/comment_data?fid=${fid}`)
-  //     .then((res) => {
-  //       setComments(res.data.body.comments);
-  //       setIsLoading(false);
-  //     });
-  // }
-
-  // useEffect(() => {
-  //   fetchFeedComment();
-  // }, []);
-
-  function onChangeComment(e) {
-    setCommentValue(e.target.value);
-  }
-
-  function onKeyDownEnter(e) {
-    if (e.key === "Enter") {
-      setIsComment(true);
-      fetchMakeComment();
-      setCommentValue("");
+  async function handleDeleteFeed() {
+    const success = await removeFeed(fid);
+    if (success) {
+      alert("삭제되었습니다.");
+      navigate(-1);
     }
   }
 
-  function onClickInput() {
-    fetchMakeComment();
-    setCommentValue("");
-  }
-
-  const header = HEADER;
-
-  async function fetchMakeComment() {
-    await postApi
-      .post("feed_explore/make_comment", {
-        header: header,
-        body: {
-          fid: `${fid}`,
-          body: `${commentValue}`,
-          target_cid: commentId,
-        },
-      })
-      .then((res) => {
-        setComments(res.data.body.comments);
-        setCommentId("");
-      });
-  }
-
-  const onClickComment = (cid, targetCid, uname) => {
-    setCommentId(targetCid || cid);
-    setCommentValue(`@${uname} `);
-    commentRef.current.focus();
-  };
-
-  function fetchRemoveFeed() {
-    mainApi.get(`feed_explore/try_remove_feed?fid=${fid}`).then((res) => {
-      if (res.data.body.result) {
-        alert("삭제되었습니다.");
-        navigate(-1);
-      }
-    });
-  }
-
-  function fetchRemoveComment(cid) {
-    mainApi
-      .get(`feed_explore/remove_comment?fid=${fid}&cid=${cid}`)
-      .then(() => {
-        setComments((prev) => {
-          return prev
-            .map((comment) => {
-              if (comment.cid === cid) {
-                return null;
-              }
-
-              if (comment.reply && comment.reply.length > 0) {
-                comment.reply = comment.reply.filter(
-                  (reply) => reply.cid !== cid,
-                );
-              }
-
-              return comment;
-            })
-            .filter((comment) => comment !== null);
-        });
-      });
-  }
-
-  function onClickOption(e) {
+  function onClickOption(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     e.stopPropagation();
     setShowMoreOption(!showMoreOption);
   }
 
-  if (isLoading) {
-    return <div>Loading</div>;
-  }
+  if (!feed) return <div>로딩중</div>;
 
   return (
     <div className={style["FeedDetail"]}>
@@ -166,7 +52,7 @@ export default function FeedDetailPage() {
           <img src={back} alt="back" />
           <span>뒤로</span>
         </button>
-        {/* {feed.is_owner && (
+        {feed.is_owner && (
           <button
             className={style["delete-button"]}
             onClick={(e) => {
@@ -175,137 +61,25 @@ export default function FeedDetailPage() {
           >
             <img src={more_icon} />
           </button>
-        )} */}
+        )}
         {showMoreOption && (
           <OptionModal
             onClickOption={onClickOption}
-            onClickDelete={fetchRemoveFeed}
+            onClickDelete={handleDeleteFeed}
           />
         )}
       </div>
 
       <div>
-        <FeedItem detailPage feed={feed} links={links} />
+        <FeedItem detailPage feed={feed} links={feed.links} />
       </div>
 
-      <div className={style["comment-container"]}>
-        <div className={style["title-box"]}>
-          <div className={style["comment-title"]}>댓글</div>
-          <div className={style["comment-total"]}>총 {feed.num_comment}건</div>
-        </div>
-
-        {/* 댓글 각각 */}
-        {comments.length !== 0 &&
-          comments.map((comment, i) => {
-            return (
-              <Comment
-                key={comment.cid}
-                comment={comment}
-                onClickComment={onClickComment}
-                handleRemove={fetchRemoveComment}
-              />
-            );
-          })}
-        <div className={style["input-container"]}>
-          <div className={style["input-wrapper"]}>
-            <input
-              ref={commentRef}
-              type="text"
-              id={style["comment"]}
-              value={commentValue}
-              onChange={onChangeComment}
-              onKeyDown={onKeyDownEnter}
-              placeholder="당신의 생각을 남겨보세요."
-            />
-            <button className={style["input-button"]} onClick={onClickInput}>
-              <img src={input} alt="input" />
-            </button>
-          </div>
-        </div>
-      </div>
-      {isComment && <p className={style["loading-st"]}>업로드 중입니다...</p>}
+      <CommentSection fid={fid} numComment={feed.num_comment} />
     </div>
   );
 }
 
-// 댓글
-function Comment({ comment, onClickComment, handleRemove }) {
-  async function fetchOriginalComment(cid) {
-    await mainApi
-      .get(`feed_explore/original_comment_data?cid=${cid}`)
-      .then((res) => {
-        //console.log("ccc", res.data);
-      });
-  }
-
-  return (
-    <div
-      key={comment.cid}
-      className={style["comment-box"]}
-      onClick={() => {
-        onClickComment(comment.cid, comment.target_cid, comment.uname);
-      }}
-    >
-      <section
-        className={`${style["comment-section"]} ${
-          comment.reply.length !== 0 ? style["reply-exist"] : ""
-        }`}
-      >
-        <div className={style["comment-user"]}>
-          <div className={style["user-name"]}>{comment.uname}</div>
-
-          <div className={style["function_button_container"]}>
-            {comment.is_reworked && (
-              <button
-                className={style["AI_text"]}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  fetchOriginalComment(comment.cid);
-                }}
-              >
-                원문 보기
-              </button>
-            )}
-            {comment.owner ? (
-              <div
-                className={style["comment-delete-report"]}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRemove(comment.cid);
-                }}
-              >
-                삭제
-              </div>
-            ) : (
-              <div className={style["comment-delete-report"]}>신고</div>
-            )}
-          </div>
-        </div>
-
-        <div className={style["comment-content"]}>{comment.body}</div>
-
-        <span className={style["date-st"]}>{comment.date}</span>
-      </section>
-
-      {comment.reply.length !== 0 &&
-        comment.reply?.map((reply, i) => {
-          return (
-            <ReplyComment
-              key={reply.cid}
-              index={i}
-              length={comment.reply.length}
-              reply={reply}
-              fetchOriginalComment={fetchOriginalComment}
-              handleRemove={handleRemove}
-            />
-          );
-        })}
-    </div>
-  );
-}
-
-// 대댓글
+/// 대댓글
 function ReplyComment({
   index,
   length,

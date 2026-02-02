@@ -4,7 +4,6 @@ import type { FeedType } from "../types/feed";
 
 export function useFeedDetail(fid: string) {
   const [feed, setFeed] = useState<FeedType | null>(null);
-  const [comments, setComments] = useState([]);
 
   async function fetchFeed() {
     const data = await fetchFeedById(fid);
@@ -34,5 +33,5 @@ export function useFeedDetail(fid: string) {
     fetchFeed();
   }, [fid]);
 
-  return { feed, fetchFeed, fetchFeedStar };
+  return { feed, fetchFeed, toggleLike };
 }

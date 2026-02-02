@@ -13,7 +13,7 @@ const starStore: Record<string, number> = {};
 const starFlagStore: Record<string, boolean> = {};
 const AIFilterStore: Record<string, boolean> = {};
 
-const mockFeeds = Array.from({ length: 30 }).map((_, i) => {
+let mockFeeds = Array.from({ length: 30 }).map((_, i) => {
   const fclass = FEED_CLASS[Math.floor(Math.random() * FEED_CLASS.length)];
 
   return {
@@ -30,6 +30,7 @@ const mockFeeds = Array.from({ length: 30 }).map((_, i) => {
       hashtag: [`test ${i}`],
       createdAt: new Date().toISOString(),
       star: 10,
+      is_owner: true,
       star_flag: false,
       is_reworked: true,
       raw_body: `<h1>mock data ${i + 1}</h1>
@@ -77,6 +78,19 @@ export const exploreHandlers = [
       });
     },
   ),
+
+  http.get(`${BASE_URL}/feed_explore/try_remove_feed`, ({ request }) => {
+    const url = new URL(request.url);
+    const fid = url.searchParams.get("fid");
+
+    mockFeeds = mockFeeds.filter((feed) => feed.feed.fid !== fid);
+
+    return HttpResponse.json({
+      body: {
+        result: true,
+      },
+    });
+  }),
 
   http.get(`${BASE_URL}/feed_explore/check_star`, ({ request }) => {
     const url = new URL(request.url);

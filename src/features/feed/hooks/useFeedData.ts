@@ -1,9 +1,9 @@
 import { useState } from "react";
 import {
+  deleteFeed,
   fetchAllFeedList,
   fetchFeedListByDate,
   fetchFeedListWithTag,
-  fetchFeedStar,
   fetchFeedWithBiasId,
 } from "../api/feed";
 import type { Feed, FeedType } from "../types/feed";
@@ -88,25 +88,10 @@ export function useFeedData({
     setIsLoading(false);
   }
 
-  async function handleToggleLike(fid: string) {
-    const data = await fetchFeedStar(fid);
+  async function removeFeed(fid: string) {
+    const data = await deleteFeed(fid);
 
-    const updatedFeed = data.send_data.feed;
-
-    setFeedData((prev) =>
-      prev.map((feed) =>
-        feed.feed.fid === fid
-          ? {
-              ...feed,
-              feed: {
-                ...feed.feed,
-                star: updatedFeed.star,
-                star_flag: updatedFeed.star_flag,
-              },
-            }
-          : feed,
-      ),
-    );
+    return data.body.result;
   }
 
   function resetFeed() {
@@ -124,7 +109,7 @@ export function useFeedData({
     fetchFeed,
     fetchFeedWithTag,
     fetchBiasFeed,
-    handleToggleLike,
+    removeFeed,
     resetFeed,
   };
 }

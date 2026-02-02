@@ -32,6 +32,7 @@ export interface FeedType {
   num_comment: number;
   fclass: string;
   raw_body: string;
+  is_owner: boolean;
   image: [];
   links: [];
 }

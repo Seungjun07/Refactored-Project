@@ -62,10 +62,16 @@ export async function fetchFeedListWithTag(tag: string, time: string) {
   return res.data;
 }
 
+export async function deleteFeed(fid: string) {
+  const res = await mainApi.get(`/feed_explore/try_remove_feed?fid=${fid}`);
+
+  return res.data;
+}
+
 // 피드 디테일
 export async function fetchFeedById(fid: string) {
   const res = await mainApi.get(
-    `${BASE_URL}/feed_explore/feed_detail/feed_data?fid=${fid}`,
+    `/feed_explore/feed_detail/feed_data?fid=${fid}`,
   );
 
   return res.data;
