@@ -95,11 +95,11 @@ export function useFeedData({
 
     setFeedData((prev) =>
       prev.map((feed) =>
-        feed.fid === fid
+        feed.feed.fid === fid
           ? {
               ...feed,
               feed: {
-                ...feed,
+                ...feed.feed,
                 star: updatedFeed.star,
                 star_flag: updatedFeed.star_flag,
               },

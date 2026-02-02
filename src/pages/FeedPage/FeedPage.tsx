@@ -115,16 +115,16 @@ export default function FeedPage() {
     resetFeed,
   } = useFeedData({ type, filterCategory, filterFclass });
 
-  // useEffect(() => {
-  //   if (!type) return;
-  //   resetFeed();
+  useEffect(() => {
+    if (!type) return;
+    resetFeed();
 
-  //   if (type === "bias") {
-  //     fetchBiasFeed(biasId);
-  //   } else {
-  //     fetchFeed();
-  //   }
-  // }, [type]);
+    if (type === "bias") {
+      fetchBiasFeed(biasId);
+    } else {
+      fetchFeed();
+    }
+  }, [type]);
 
   // useEffect(() => {
   //   if (isSameTag) {
@@ -259,7 +259,7 @@ export default function FeedPage() {
               : style["none_feed_scroll"]
           }
         >
-          <FeedList type={type} />
+          <FeedList type={type} feedData={feedData} />
           {/* {isLoading ? (
             <></>
           ) : // <MyPageLoading />

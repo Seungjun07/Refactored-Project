@@ -1,42 +1,27 @@
-import { useEffect } from "react";
 import { useFeedData } from "../hooks/useFeedData";
 import FeedItem from "./Feed/FeedItem";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import useBiasStore from "@/stores/BiasStore/useBiasStore";
+import type { Feed, FeedType } from "../types/feed";
 
 interface FeedListProps {
   type: "today" | "weekly" | "all" | "bias" | null;
+  feedData: Feed[];
   filterCategory?: string[];
   filterFclass?: string;
 }
 export default function FeedList({
   type,
+  feedData,
   filterCategory,
   filterFclass,
 }: FeedListProps) {
-  const {
-    feedData,
-    nextKey,
-    isLoading,
-    hasMore,
-    fetchFeed,
-    setFeedData,
-    fetchFeedWithTag,
-    fetchBiasFeed,
-    resetFeed,
-  } = useFeedData({ type, filterCategory, filterFclass });
+  const { isLoading, hasMore, fetchFeed, fetchBiasFeed } = useFeedData({
+    type,
+    filterCategory,
+    filterFclass,
+  });
   let { biasList, biasId, setBiasId } = useBiasStore();
-
-  useEffect(() => {
-    if (!type) return;
-    resetFeed();
-
-    if (type === "bias") {
-      fetchBiasFeed(biasId);
-    } else {
-      fetchFeed();
-    }
-  }, [type]);
 
   // useEffect(() => {
   //   if (isSameTag) {
@@ -45,10 +30,6 @@ export default function FeedList({
   //     setHasMore(false);
   //   }
   // }, [isSameTag]);
-
-  function onClickTag(tag: string) {
-    fetchFeedWithTag(tag);
-  }
 
   const loadMoreCallBack = () => {
     if (!isLoading && hasMore) {
