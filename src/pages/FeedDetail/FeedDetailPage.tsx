@@ -18,7 +18,7 @@ import { ContentFeed } from "../../component/feed";
 
 import style from "./FeedDetail.module.css";
 
-export default function FeedDetail() {
+export default function FeedDetailPage() {
   let navigate = useNavigate();
   let { fid } = useParams();
 
@@ -43,12 +43,14 @@ export default function FeedDetail() {
   }, [isLoading]);
 
   async function fetchFeed() {
-    await mainApi.get(`feed_explore/feed_detail/feed_data?fid=${fid}`).then((res) => {
-      setFeedData(res.data.body.feed[0]);
-      setLinks(res.data.body.links);
-      setIsLoading(false);
-      setIsComment(false);
-    });
+    await mainApi
+      .get(`feed_explore/feed_detail/feed_data?fid=${fid}`)
+      .then((res) => {
+        setFeedData(res.data.body.feed[0]);
+        setLinks(res.data.body.links);
+        setIsLoading(false);
+        setIsComment(false);
+      });
   }
 
   useEffect(() => {
@@ -56,10 +58,12 @@ export default function FeedDetail() {
   }, [comments, fid]);
 
   async function fetchFeedComment() {
-    await mainApi.get(`feed_explore/feed_detail/comment_data?fid=${fid}`).then((res) => {
-      setComments(res.data.body.comments);
-      setIsLoading(false);
-    });
+    await mainApi
+      .get(`feed_explore/feed_detail/comment_data?fid=${fid}`)
+      .then((res) => {
+        setComments(res.data.body.comments);
+        setIsLoading(false);
+      });
   }
 
   useEffect(() => {
@@ -140,23 +144,27 @@ export default function FeedDetail() {
   }
 
   function fetchRemoveComment(cid) {
-    mainApi.get(`feed_explore/remove_comment?fid=${fid}&cid=${cid}`).then(() => {
-      setComments((prev) => {
-        return prev
-          .map((comment) => {
-            if (comment.cid === cid) {
-              return null;
-            }
+    mainApi
+      .get(`feed_explore/remove_comment?fid=${fid}&cid=${cid}`)
+      .then(() => {
+        setComments((prev) => {
+          return prev
+            .map((comment) => {
+              if (comment.cid === cid) {
+                return null;
+              }
 
-            if (comment.reply && comment.reply.length > 0) {
-              comment.reply = comment.reply.filter((reply) => reply.cid !== cid);
-            }
+              if (comment.reply && comment.reply.length > 0) {
+                comment.reply = comment.reply.filter(
+                  (reply) => reply.cid !== cid,
+                );
+              }
 
-            return comment;
-          })
-          .filter((comment) => comment !== null);
+              return comment;
+            })
+            .filter((comment) => comment !== null);
+        });
       });
-    });
   }
 
   function onClickOption(e) {
@@ -192,18 +200,28 @@ export default function FeedDetail() {
           </button>
         )}
         {showMoreOption && (
-          <OptionModal onClickOption={onClickOption} onClickDelete={fetchRemoveFeed} />
+          <OptionModal
+            onClickOption={onClickOption}
+            onClickDelete={fetchRemoveFeed}
+          />
         )}
       </div>
 
       <div>
-        <ContentFeed detailPage feed={feedData} handleCheckStar={handleCheckStar} links={links} />
+        <ContentFeed
+          detailPage
+          feed={feedData}
+          handleCheckStar={handleCheckStar}
+          links={links}
+        />
       </div>
 
       <div className={style["comment-container"]}>
         <div className={style["title-box"]}>
           <div className={style["comment-title"]}>댓글</div>
-          <div className={style["comment-total"]}>총 {feedData && feedData.num_comment}건</div>
+          <div className={style["comment-total"]}>
+            총 {feedData && feedData.num_comment}건
+          </div>
         </div>
 
         {/* 댓글 각각 */}
@@ -243,9 +261,11 @@ export default function FeedDetail() {
 // 댓글
 function Comment({ comment, onClickComment, handleRemove }) {
   async function fetchOriginalComment(cid) {
-    await mainApi.get(`feed_explore/original_comment_data?cid=${cid}`).then((res) => {
-      //console.log("ccc", res.data);
-    });
+    await mainApi
+      .get(`feed_explore/original_comment_data?cid=${cid}`)
+      .then((res) => {
+        //console.log("ccc", res.data);
+      });
   }
 
   return (
@@ -316,7 +336,13 @@ function Comment({ comment, onClickComment, handleRemove }) {
 }
 
 // 대댓글
-function ReplyComment({ index, length, reply, fetchOriginalComment, handleRemove }) {
+function ReplyComment({
+  index,
+  length,
+  reply,
+  fetchOriginalComment,
+  handleRemove,
+}) {
   const [firstWord, ...restWords] = reply.body.split(" ");
 
   let src;
@@ -336,7 +362,11 @@ function ReplyComment({ index, length, reply, fetchOriginalComment, handleRemove
   return (
     <div className={style["img-container"]}>
       <img src={src} alt="대댓글" />
-      <div key={reply.cid} className={`${style["reply-box"]}`} onClick={(e) => e.stopPropagation()}>
+      <div
+        key={reply.cid}
+        className={`${style["reply-box"]}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className={style["comment-user"]}>
           <p>{reply.uname}</p>
           <div className={style["function_button_container"]}>
@@ -369,7 +399,9 @@ function ReplyComment({ index, length, reply, fetchOriginalComment, handleRemove
         </div>
 
         <div className={style["comment-content"]}>
-          <span style={{ color: reply.mention ? "#2C59CD" : "black" }}>{firstWord} </span>
+          <span style={{ color: reply.mention ? "#2C59CD" : "black" }}>
+            {firstWord}{" "}
+          </span>
           {restWords.join("")}
         </div>
 

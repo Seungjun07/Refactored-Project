@@ -175,13 +175,6 @@ function App() {
   {
     /* <Route path="*" element={<div>404 Error</div>}></Route> */
   }
-
-  {
-    /* 홈 화면 */
-  }
-  {
-    /* <Route path="/" element={<HomePage />} /> */
-  }
   {
     /* </Routes> */
   }
