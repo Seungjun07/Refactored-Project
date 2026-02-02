@@ -8,7 +8,7 @@ export default function FeedActions({ feed }) {
   const navigate = useNavigate();
 
   function handleNavigate(fid: string) {
-    navigate(`/feed_detail/${fid}`, {
+    navigate(`/feed/${fid}`, {
       state: { commentClick: true },
     });
   }

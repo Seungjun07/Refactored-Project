@@ -64,7 +64,7 @@ export default function FeedItem({ detailPage, feed, links }: FeedItemProps) {
         if (hasDragged) return;
         e.preventDefault();
         e.stopPropagation();
-        navigate(`/feed_detail/${feed.fid}`, {
+        navigate(`/feed/${feed.fid}`, {
           state: { commentClick: false },
         });
       }}
