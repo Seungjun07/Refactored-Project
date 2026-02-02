@@ -14,22 +14,22 @@ import reArrow2 from "./../../img/reArrow2.svg";
 import reArrow3 from "./../../img/reArrow3.svg";
 import reArrow4 from "./../../img/reArrow4.svg";
 
-import { ContentFeed } from "../../component/feed";
-
 import style from "./FeedDetail.module.css";
+import FeedItem from "@/features/feed/components/Feed/FeedItem";
+import { useFeedDetail } from "@/features/feed/hooks/useFeedDetail";
 
 export default function FeedDetailPage() {
   let navigate = useNavigate();
-  let { fid } = useParams();
+  const params = useParams<{ fid: string }>();
+  const fid = params.fid!;
 
   let location = useLocation();
   let { state } = location;
 
   let commentRef = useRef(null);
 
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 관리
   const [isComment, setIsComment] = useState(false);
-  let [feedData, setFeedData] = useState([]);
   let [comments, setComments] = useState([]);
   let [commentValue, setCommentValue] = useState("");
   let [commentId, setCommentId] = useState("");
@@ -42,56 +42,33 @@ export default function FeedDetailPage() {
     }
   }, [isLoading]);
 
-  async function fetchFeed() {
-    await mainApi
-      .get(`feed_explore/feed_detail/feed_data?fid=${fid}`)
-      .then((res) => {
-        setFeedData(res.data.body.feed[0]);
-        setLinks(res.data.body.links);
-        setIsLoading(false);
-        setIsComment(false);
-      });
-  }
+  const { feed } = useFeedDetail(fid);
 
-  useEffect(() => {
-    fetchFeed();
-  }, [comments, fid]);
+  if (!feed) return <div>로딩중</div>;
 
-  async function fetchFeedComment() {
-    await mainApi
-      .get(`feed_explore/feed_detail/comment_data?fid=${fid}`)
-      .then((res) => {
-        setComments(res.data.body.comments);
-        setIsLoading(false);
-      });
-  }
+  // async function fetchFeed() {
+  //   await mainApi
+  //     .get(`feed_explore/feed_detail/feed_data?fid=${fid}`)
+  //     .then((res) => {
+  //       setFeedData(res.data.body.feed[0]);
+  //       setLinks(res.data.body.links);
+  //       setIsLoading(false);
+  //       setIsComment(false);
+  //     });
+  // }
 
-  useEffect(() => {
-    fetchFeedComment();
-  }, []);
+  // async function fetchFeedComment() {
+  //   await mainApi
+  //     .get(`feed_explore/feed_detail/comment_data?fid=${fid}`)
+  //     .then((res) => {
+  //       setComments(res.data.body.comments);
+  //       setIsLoading(false);
+  //     });
+  // }
 
-  async function handleCheckStar(fid, e) {
-    await mainApi
-      .get(`feed_explore/check_star?fid=${fid}`)
-      .then((res) => {
-        setFeedData((prevData) => {
-          return prevData.fid === fid
-            ? {
-                ...prevData,
-                star: res.data.body.feed[0].star,
-                star_flag: res.data.body.feed[0].star_flag,
-              }
-            : prevData;
-        });
-      })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          navigate("/novalogin");
-        } else {
-          console.error("Error checking star:", err);
-        }
-      });
-  }
+  // useEffect(() => {
+  //   fetchFeedComment();
+  // }, []);
 
   function onChangeComment(e) {
     setCommentValue(e.target.value);
@@ -189,7 +166,7 @@ export default function FeedDetailPage() {
           <img src={back} alt="back" />
           <span>뒤로</span>
         </button>
-        {feedData.is_owner && (
+        {/* {feed.is_owner && (
           <button
             className={style["delete-button"]}
             onClick={(e) => {
@@ -198,7 +175,7 @@ export default function FeedDetailPage() {
           >
             <img src={more_icon} />
           </button>
-        )}
+        )} */}
         {showMoreOption && (
           <OptionModal
             onClickOption={onClickOption}
@@ -208,20 +185,13 @@ export default function FeedDetailPage() {
       </div>
 
       <div>
-        <ContentFeed
-          detailPage
-          feed={feedData}
-          handleCheckStar={handleCheckStar}
-          links={links}
-        />
+        <FeedItem detailPage feed={feed} links={links} />
       </div>
 
       <div className={style["comment-container"]}>
         <div className={style["title-box"]}>
           <div className={style["comment-title"]}>댓글</div>
-          <div className={style["comment-total"]}>
-            총 {feedData && feedData.num_comment}건
-          </div>
+          <div className={style["comment-total"]}>총 {feed.num_comment}건</div>
         </div>
 
         {/* 댓글 각각 */}

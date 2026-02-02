@@ -1,6 +1,7 @@
 import star_color from "@/img/favorite_color.png";
 import star from "@/img/favorite.png";
 import { useFeedData } from "@/features/feed/hooks/useFeedData";
+import { useFeedDetail } from "@/features/feed/hooks/useFeedDetail";
 
 interface LikeStarButtonProps {
   fid: string;
@@ -12,12 +13,12 @@ export default function LikeStarButton({
   isLiked,
   likeCount,
 }: LikeStarButtonProps) {
-  const { handleToggleLike } = useFeedData({ type: null });
+  const { fetchFeedStar } = useFeedDetail(fid);
 
   return (
     <button
       onClick={(e) => {
-        (e.stopPropagation(), handleToggleLike(fid));
+        (e.stopPropagation(), fetchFeedStar(fid));
       }}
     >
       <img src={isLiked ? star_color : star} alt="star-icon" />

@@ -12,7 +12,6 @@ import postApi from "../services/apis/postApi";
 import HEADER from "../constant/header";
 import mainApi from "../services/apis/mainApi";
 import useDragScroll from "../hooks/useDragScroll.ts";
-import useFeedActions from "../hooks/useFeedActions";
 import LikeStarButton from "./Interaction/LikeStarButton";
 import ReportButton from "./Interaction/ReportButton";
 import { useLinkPreview } from "@/features/feed/hooks/useLinkPreview";
@@ -39,8 +38,6 @@ import FeedBody from "@/features/feed/components/Feed/FeedBody.tsx";
 const header = HEADER;
 
 export default function Feed({ feed, setFeedData, type }) {
-  // const { handleCheckStar } = useFeedActions(setFeedData, type);
-
   const [report, setReport] = useState();
 
   async function fetchReportResult(fid) {

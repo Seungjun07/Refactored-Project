@@ -12,7 +12,6 @@ import useDragScroll from "@/hooks/useDragScroll.ts";
 // const header = HEADER;
 
 // export function Feed({ feed, setFeedData, type }) {
-//   // const { handleCheckStar } = useFeedActions(setFeedData, type);
 
 //   const [report, setReport] = useState();
 

@@ -209,6 +209,21 @@ export const exploreHandlers = [
       },
     });
   }),
+
+  http.get(`${BASE_URL}/feed_explore/feed_detail/feed_data`, ({ request }) => {
+    console.log("MSW detail search: ");
+    const url = new URL(request.url);
+    const fid = url.searchParams.get("fid");
+
+    const feed = mockFeeds.find((item) => item.feed.fid === fid);
+    console.log(feed);
+
+    return HttpResponse.json({
+      body: {
+        feed: feed,
+      },
+    });
+  }),
 ];
 
 function applyStarState(feeds: typeof mockFeeds) {

@@ -1,4 +1,4 @@
-import mainApi from "@/services/apis/mainApi";
+import mainApi, { BASE_URL } from "@/services/apis/mainApi";
 import type { FeedRequest } from "../types/feed";
 import HEADER from "@/constant/header";
 
@@ -59,6 +59,15 @@ export async function fetchFeedListWithTag(tag: string, time: string) {
   const res = await mainApi.get(
     `/feed_explore/search_feed_with_hashtag?hashtag=${tag}&key=0&target_time=${time}`,
   );
+  return res.data;
+}
+
+// 피드 디테일
+export async function fetchFeedById(fid: string) {
+  const res = await mainApi.get(
+    `${BASE_URL}/feed_explore/feed_detail/feed_data?fid=${fid}`,
+  );
+
   return res.data;
 }
 
