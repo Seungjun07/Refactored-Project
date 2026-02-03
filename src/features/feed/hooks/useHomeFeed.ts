@@ -8,7 +8,7 @@ export function useHomeFeed() {
   const { data: weeklyFeed } = useFetchFeedData(`/home/weekly_best`);
   const { data: allFeed } = useFetchFeedData(`/home/all_feed`);
 
-  let { biasId, biasList, setBiasId, selectedBias } = useBiasStore();
+  let { selectedBias } = useBiasStore();
 
   const { feedData: biasFeed, fetchBiasCategoryData } = useFetchFeedWithBias();
 
@@ -24,7 +24,6 @@ export function useHomeFeed() {
       biasFeed,
     },
     biasActions: {
-      setBiasId,
       fetchBiasCategoryData,
     },
   };

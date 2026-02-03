@@ -46,6 +46,7 @@ let mockFeeds = Array.from({ length: 30 }).map((_, i) => {
       num_comment: 5,
       links: [
         {
+          lid: `${i + 1}`,
           title: "title 태그",
           domain: "youtube",
           explain: "설명",
@@ -68,6 +69,7 @@ export const exploreHandlers = [
       const end = start + PAGE_SIZE;
 
       const pageData = mockFeeds.slice(start, end);
+      console.log("dasdsad", pageData);
 
       return HttpResponse.json({
         success: true,
@@ -230,7 +232,6 @@ export const exploreHandlers = [
     const fid = url.searchParams.get("fid");
 
     const feed = mockFeeds.find((item) => item.feed.fid === fid);
-    console.log(feed);
 
     return HttpResponse.json({
       body: {

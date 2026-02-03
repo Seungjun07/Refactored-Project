@@ -43,7 +43,7 @@ export default function FeedPage() {
     ? (rawType as FeedType)
     : null;
   // 전역 상태 관리
-  let { biasList, biasId, setBiasId } = useBiasStore();
+  let { selectedBias } = useBiasStore();
   const { board } = useBoardStore();
 
   // 드래그 기능
@@ -71,15 +71,15 @@ export default function FeedPage() {
     JSON.parse(localStorage.getItem("content")) || "",
   );
 
-  let bids = biasList.map((item) => {
-    return item.bid;
-  });
+  // let bids = biasList.map((item) => {
+  //   return item.bid;
+  // });
 
-  useEffect(() => {
-    if (bids.length > 0 && !biasId) {
-      setBiasId(bids[0]);
-    }
-  }, [bids]);
+  // useEffect(() => {
+  //   if (bids.length > 0 && !biasId) {
+  //     setBiasId(bids[0]);
+  //   }
+  // }, [bids]);
 
   function onClickApplyButton1() {
     setNextData(-1);
@@ -120,11 +120,11 @@ export default function FeedPage() {
     resetFeed();
 
     if (type === "bias") {
-      fetchBiasFeed(biasId);
+      fetchBiasFeed(selectedBias?.bid ?? "");
     } else {
       fetchFeed();
     }
-  }, [type, biasId]);
+  }, [type, selectedBias]);
 
   // useEffect(() => {
   //   if (isSameTag) {
@@ -183,10 +183,7 @@ export default function FeedPage() {
         <Header />
         {type === "bias" && (
           <div className={style["bias-section"]}>
-            <BiasBoxes
-              setBiasId={setBiasId}
-              fetchBiasCategoryData={fetchBiasFeed}
-            />
+            <BiasBoxes fetchBiasCategoryData={fetchBiasFeed} />
             <h4>게시글 미리보기</h4>
             <div
               ref={scrollRef}

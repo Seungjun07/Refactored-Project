@@ -33,7 +33,7 @@ const SimpleSlider = ({ feedData, brightMode, type, className }) => {
 
   function onClickMore(fid, e) {
     if (!isDragging) {
-      navigate(`/feed_detail/${fid}`, { state: { commentClick: false } });
+      navigate(`/feed/${fid}`, { state: { commentClick: false } });
     }
   }
 

@@ -78,14 +78,14 @@ export function useFeedData({
     const currentBid = bid || bids[0] || "";
 
     const data = await fetchFeedWithBiasId({
-      bid: currentBid,
+      bid: selectedBias?.bid || "",
       board,
       key: nextKey,
     });
     setFeedData((prev) =>
       nextKey === 0 ? data.body.send_data : [...prev, ...data.body.send_data],
     );
-    setNextKey(data.body.key);
+    setNextKey(data.body.nextkey);
     setHasMore(data.body.send_data.length > 0);
     setIsLoading(false);
   }
