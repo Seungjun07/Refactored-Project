@@ -7,6 +7,7 @@ import {
   fetchFeedWithBiasId,
 } from "../api/feed";
 import type { Feed, FeedType } from "../types/feed";
+import useBiasStore from "@/stores/BiasStore/useBiasStore";
 
 interface UseFeedDataParams {
   type?: "today" | "weekly" | "all" | "bias" | null;
@@ -29,6 +30,7 @@ export function useFeedData({
   const [nextKey, setNextKey] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const { selectedBias } = useBiasStore();
 
   async function fetchFeed() {
     setIsLoading(true);

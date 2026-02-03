@@ -21,7 +21,7 @@ export default function FeedList({
     filterCategory,
     filterFclass,
   });
-  let { biasList, biasId, setBiasId } = useBiasStore();
+  let { biasList, biasId, setBiasId, selectedBias } = useBiasStore();
 
   // useEffect(() => {
   //   if (isSameTag) {
@@ -34,7 +34,7 @@ export default function FeedList({
   const loadMoreCallBack = () => {
     if (!isLoading && hasMore) {
       if (type === "bias") {
-        fetchBiasFeed(biasId);
+        fetchBiasFeed();
       } else {
         fetchFeed();
       }

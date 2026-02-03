@@ -1,31 +1,36 @@
 import { getBiasList } from "@/features/bias/api/bias";
+import type { Bias } from "@/features/bias/types/bias";
 import { create } from "zustand";
 
 interface BiasStoreState {
-  biasList: [];
+  biasList: Bias[];
   loading: boolean;
-  error: string | null;
-  biasId: string;
-  setBiasId: (id: string) => void;
+  selectedBias: Bias | null;
+  setSelectedBias: (bias: Bias) => void;
+  fetchBiasList: () => Promise<void>;
 }
 
 const useBiasStore = create<BiasStoreState>((set) => ({
   biasList: [],
   loading: false,
-  error: null,
-  biasId: "",
-
-  setBiasId: (id) => set({ biasId: id }),
+  selectedBias: null,
 
   fetchBiasList: async () => {
-    set({ loading: true, error: null });
+    set({ loading: true });
     try {
-      const res = await getBiasList();
-      set({ biasList: res.body.bias_list, loading: false });
+      const data = await getBiasList();
+      set({
+        biasList: data.body.bias_list,
+        loading: false,
+        selectedBias: data.body.bias_list[0] || null,
+      });
     } catch (err) {
-      set({ error: err.message, loading: false });
+      console.log(err);
+      set({ loading: false });
     }
   },
+
+  setSelectedBias: (bias) => set({ selectedBias: bias }),
 }));
 
 export default useBiasStore;

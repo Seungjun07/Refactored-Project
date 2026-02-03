@@ -68,7 +68,6 @@ export default function HomePage() {
           customClassName="custom-height"
         >
           <BiasBoxes
-            setBiasId={biasActions.setBiasId}
             fetchBiasCategoryData={biasActions.fetchBiasCategoryData}
           />
         </FeedThumbnail>
