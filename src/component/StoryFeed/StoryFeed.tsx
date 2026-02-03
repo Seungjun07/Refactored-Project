@@ -1,9 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import style from "./StoryFeed.module.css";
-export default function StoryFeed({ feedData, type, hasDragged }) {
+import type { Feed } from "@/features/feed/types/feed";
+
+interface StoryFeedProps {
+  feedData: Feed;
+  type?: "home";
+  hasDragged: boolean;
+}
+export default function StoryFeed({
+  feedData,
+  type,
+  hasDragged,
+}: StoryFeedProps) {
   let navigate = useNavigate();
 
-  function onClickFeed(fid) {
+  function onClickFeed(fid: string) {
     navigate(`/feed/${fid}`, { state: { commentClick: false } });
   }
 

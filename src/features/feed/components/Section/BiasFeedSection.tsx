@@ -1,31 +1,35 @@
-import BiasBoxes from "@/component/BiasBoxes/BiasBoxes";
+import BiasBoxes from "@/features/bias/components/BiasBoxes";
 import StoryFeed from "@/component/StoryFeed/StoryFeed";
 import useDragScroll from "@/hooks/useDragScroll";
-import style from "@/pages/FeedPage/FeedPage.module.css";
+import style from "@/pages/FeedPage/FeedHashList.module.css";
 import { useFeedData } from "../../hooks/useFeedData";
 import useBiasStore from "@/stores/BiasStore/useBiasStore";
+import type { Feed } from "../../types/feed";
 
-export default function BiasSection() {
-  const { setBiasId } = useBiasStore();
-  const { feedData, fetchBiasFeed } = useFeedData({ type: "bias" });
+interface BiasFeedSection {
+  feedData: Feed[];
+  onClickCategory: () => void;
+}
+export default function BiasFeedSection({
+  feedData,
+  onClickCategory,
+}: BiasFeedSection) {
+  const {} = useBiasStore();
+  const { fetchBiasFeed } = useFeedData({ type: "bias" });
   const { scrollRef, hasDragged, dragHandlers } = useDragScroll();
 
   return (
     <div className={style["bias-section"]}>
-      <BiasBoxes
-        // setBiasId={setBiasId}
-        fetchBiasCategoryData={fetchBiasFeed}
-      />
+      <BiasBoxes fetchBiasCategoryData={fetchBiasFeed} />
       <h4>게시글 미리보기</h4>
+
       <div
         ref={scrollRef}
         className={style["story_container"]}
-        onMouseDown={dragHandlers.onMouseDown}
-        onMouseUp={dragHandlers.onMouseUp}
-        onMouseMove={dragHandlers.onMouseMove}
+        {...dragHandlers}
       >
         <div className={style["story_wrapper"]}>
-          {feedData.map((feed, i) => {
+          {feedData.map((feed) => {
             return (
               <StoryFeed
                 key={`story_${feed.feed.fid}`}

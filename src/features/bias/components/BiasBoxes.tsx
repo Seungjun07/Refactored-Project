@@ -8,7 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import "./index.css";
 import useBiasStore from "@/stores/BiasStore/useBiasStore";
 import BiasList from "@/features/bias/components/BiasList.tsx";
-import useDragScroll from "../../hooks/useDragScroll.ts";
+import useDragScroll from "../../../hooks/useDragScroll.ts";
 import type { Bias } from "@/features/bias/types/bias.ts";
 
 export default function BiasBoxes({

@@ -50,7 +50,7 @@ interface FeedItemProps {
 
 export default function FeedItem({ detailPage, feed, links }: FeedItemProps) {
   let navigate = useNavigate();
-  const { hasDragged } = useDragScroll();
+  const drag = useDragScroll();
 
   if (!feed) {
     return <div>loading 중...</div>;
@@ -60,9 +60,11 @@ export default function FeedItem({ detailPage, feed, links }: FeedItemProps) {
     <div
       className={`${style["wrapper-container"]} ${feed.fclass === "long" && style["long-wrapper"]}`}
       onClick={(e) => {
-        if (hasDragged) return;
-        e.preventDefault();
-        e.stopPropagation();
+        if (drag.hasDragged) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
         navigate(`/feed/${feed.fid}`, {
           state: { commentClick: false },
         });
@@ -85,7 +87,7 @@ export default function FeedItem({ detailPage, feed, links }: FeedItemProps) {
         <HashTags hashtags={feed.hashtag} />
 
         <FeedBody feed={feed} />
-        <FeedImage images={feed.image} variant="short" />
+        <FeedImage images={feed.image} variant="short" drag={drag} />
       </div>
 
       {links && <LinkSection links={links} />}

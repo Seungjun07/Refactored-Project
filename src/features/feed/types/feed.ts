@@ -33,6 +33,6 @@ export interface FeedType {
   fclass: string;
   raw_body: string;
   is_owner: boolean;
-  image: [];
+  image: string[];
   links: [];
 }

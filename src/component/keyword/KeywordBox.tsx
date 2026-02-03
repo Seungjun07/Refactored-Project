@@ -1,49 +1,41 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useDragScroll from "../../hooks/useDragScroll.ts";
-import mainApi from "../../services/apis/mainApi";
 import style from "./KeywordBox.module.css";
+import { useBestHashtags } from "@/features/hash-tag/hooks/useBestHashtags.ts";
+
+interface KeywordBoxProps {
+  type: "today" | "weekly";
+  title: string;
+  subTitle: string;
+  onClickTag: (tag: string) => void;
+  fetchData: () => Promise<void>;
+  setIsSameTag: (value: boolean) => void;
+}
 
 export default function KeywordBox({
   type,
   title,
   subTitle,
-  onClickTagButton,
+  onClickTag,
   fetchData,
   setIsSameTag,
-}) {
+}: KeywordBoxProps) {
   const { scrollRef, hasDragged, dragHandlers } = useDragScroll();
+  const { tags } = useBestHashtags(type);
 
-  let [bestTags, setBestTags] = useState([]);
-  let [isLoading, setIsLoading] = useState(true);
+  let [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  async function fetchHashTags() {
-    await mainApi.get(`home/${type}_spiked_hot_hashtag`).then((res) => {
-      setBestTags(res.data.body.hashtags);
-      setIsLoading(false);
-      // console.log(`${type}`, res.data);
-    });
-  }
-
-  useEffect(() => {
-    fetchHashTags();
-  }, []);
-
-  let [currentTag, setCurrentTag] = useState();
-
-  function onClickTags(index, tag) {
-    if (currentTag === index) {
-      setIsSameTag(true);
-      setCurrentTag(null);
+  function handleTagClick(index: number, tag: string) {
+    if (activeIndex === index) {
+      setActiveIndex(null);
       fetchData();
-    } else {
-      setIsSameTag(false);
-      setCurrentTag(index);
-      onClickTagButton(tag);
+      setIsSameTag(true);
+      return;
     }
-  }
 
-  if (isLoading) {
-    return null;
+    setIsSameTag(false);
+    setActiveIndex(index);
+    onClickTag(tag);
   }
 
   return (
@@ -55,20 +47,18 @@ export default function KeywordBox({
       <div
         className={style["tags-container"]}
         ref={scrollRef}
-        onMouseDown={dragHandlers.onMouseDown}
-        onMouseMove={dragHandlers.onMouseMove}
-        onMouseUp={dragHandlers.onMouseUp}
+        {...dragHandlers}
       >
         <div className={style["tags-wrapper"]}>
-          {bestTags.map((tag, i) => {
+          {tags.map((tag, i) => {
             return (
               <div
-                key={i}
+                key={tag}
                 onClick={() => {
                   if (hasDragged) return;
-                  onClickTags(i, tag);
+                  handleTagClick(i, tag);
                 }}
-                className={`${style["tags"]} ${currentTag === i ? style["click-tag"] : ""}`}
+                className={`${style["tags"]} ${activeIndex === i ? style["click-tag"] : ""}`}
               >
                 #{tag}
               </div>

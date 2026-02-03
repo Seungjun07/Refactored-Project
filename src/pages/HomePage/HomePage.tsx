@@ -8,7 +8,7 @@ import "@/App.css";
 import Header from "@/component/Header/Header.tsx";
 import SearchBox from "@/component/SearchBox.tsx";
 import Banner from "@/component/Banner/Banner.tsx";
-import BiasBoxes from "@/component/BiasBoxes/BiasBoxes.tsx";
+import BiasBoxes from "@/features/bias/components/BiasBoxes";
 import FeedThumbnail from "@/component/feed-list/FeedThumbnail.tsx";
 import AllPost from "@/component/AllPost/AllPost.tsx";
 import NavBar from "@/component/NavBar/NavBar.tsx";

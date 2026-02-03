@@ -4,29 +4,19 @@ import { useSearchParams } from "react-router-dom";
 import useBiasStore from "../../stores/BiasStore/useBiasStore.js";
 
 import { getModeClass } from "../../App.js";
-
-import filter_icon from "./../../img/filter.svg";
-
-import BiasBoxes from "../../component/BiasBoxes/BiasBoxes.js";
 // import FilterModal from "../../component/FilterModal/FilterModal.js";
-import SearchBox from "../../component/SearchBox.js";
-import KeywordBox from "../../component/keyword/KeywordBox.js";
 // import CategoryModal from "../../component/CategoryModal/CategoryModal.js";
 import NoneFeed from "../../component/NoneFeed/NoneFeed.js";
 import Header from "../../component/Header/Header.js";
-import StoryFeed from "../../component/StoryFeed/StoryFeed.js";
 
 import "@toast-ui/editor/dist/toastui-editor-viewer.css";
 import style from "./FeedHashList.module.css";
-import useDragScroll from "../../hooks/useDragScroll.js";
 import LoadingPage from "../LoadingPage/LoadingPage.js";
-import useIntersectionObserver from "../../hooks/useIntersectionObserver.js";
-import useBoardStore from "../../stores/BoardStore/useBoardStore.js";
-import Feed from "@/component/feed.js";
-import { useFeedListByDateQuery } from "@/features/feed/hooks/queries/useFeedListByDateQuery.js";
 import { useFeedData } from "@/features/feed/hooks/useFeedData.js";
 import FeedList from "@/features/feed/components/FeedList.js";
-import FeedItem from "@/features/feed/components/Feed/FeedItem.js";
+import FeedSearchSection from "@/features/feed/components/Section/FeedSearchSection.js";
+import KeywordFeedSection from "@/features/feed/components/Section/KeywordFeedSection.js";
+import BiasFeedSection from "@/features/feed/components/Section/BiasFeedSection.js";
 // import MyPageLoading from "../LoadingPage/MypageLoading.js";
 
 export default function FeedPage() {
@@ -44,10 +34,8 @@ export default function FeedPage() {
     : null;
   // 전역 상태 관리
   let { selectedBias } = useBiasStore();
-  const { board } = useBoardStore();
 
   // 드래그 기능
-  const { scrollRef, hasDragged, dragHandlers } = useDragScroll();
   let [isFilterClicked, setIsFilterClicked] = useState(false);
   let [isOpendCategory, setIsOpendCategory] = useState(false);
 
@@ -138,23 +126,6 @@ export default function FeedPage() {
     fetchFeedWithTag(tag);
   }
 
-  // const loadMoreCallBack = () => {
-  //   if (!isLoading && hasMore) {
-  //     if (type === "bias") {
-  //       fetchBiasFeed(biasId);
-  //     } else {
-  //       fetchFeed();
-  //     }
-  //   }
-  // };
-
-  // // 무한 스크롤
-  // const targetRef = useIntersectionObserver(
-  //   loadMoreCallBack,
-  //   { threshold: 0.5 },
-  //   hasMore,
-  // );
-
   // 모달 창 - 전체 피드 목록
   function onClickCategory() {
     setIsOpendCategory(!isOpendCategory);
@@ -169,84 +140,38 @@ export default function FeedPage() {
   // } else {
   //   document.body.style.overflow = "auto";
   // }
-  function TopSectionByType() {
-    if (type === "bias") return;
-    if (type === "all") return;
-    if (type === "today" || type === "weekly") return;
-
-    return null;
-  }
 
   return (
     <div className={`all-box ${style["all_container"]}`}>
       <div className={`${style["container"]} ${style[getModeClass(mode)]}`}>
         <Header />
         {type === "bias" && (
-          <div className={style["bias-section"]}>
-            <BiasBoxes fetchBiasCategoryData={fetchBiasFeed} />
-            <h4>게시글 미리보기</h4>
-            <div
-              ref={scrollRef}
-              className={style["story_container"]}
-              onMouseDown={dragHandlers.onMouseDown}
-              onMouseUp={dragHandlers.onMouseUp}
-              onMouseMove={dragHandlers.onMouseMove}
-            >
-              <div className={style["story_wrapper"]}>
-                {feedData.map((feed, i) => {
-                  return (
-                    <StoryFeed
-                      key={`story_${feed.feed.fid}`}
-                      feedData={feed}
-                      hasDragged={hasDragged}
-                    />
-                  );
-                })}
-              </div>
-            </div>
+          <BiasFeedSection
+            feedData={feedData}
+            onClickCategory={onClickCategory}
+          />
 
-            <div className={style["category-info"]}>
-              <p>게시글 목록</p>
-              <p className={style["category_change"]} onClick={onClickCategory}>
-                카테고리 변경
-              </p>
-            </div>
-
-            {/* {biasId && (
-              <CategoryModal
-                SetIsOpen={setIsOpendCategory}
-                onClickCategory={onClickCategory}
-                biasId={biasId}
-                isOpend={isOpendCategory}
-              />
-            )} */}
-          </div>
+          //   {biasId && (
+          //     <CategoryModal
+          //       SetIsOpen={setIsOpendCategory}
+          //       onClickCategory={onClickCategory}
+          //       biasId={biasId}
+          //       isOpend={isOpendCategory}
+          //     />
+          //   )}
+          // </div>
         )}
         {type === "all" && (
-          <div className={style["search-section"]}>
-            <SearchBox />
-            <div className={style["search-filter"]}>
-              <button onClick={onClickFilterButton}>
-                필터
-                <span className={style["filter-icon"]}>
-                  <img src={filter_icon} alt="filter" />
-                </span>
-              </button>
-            </div>
-          </div>
+          <FeedSearchSection onFilterClick={onClickFilterButton} />
         )}
 
         {(type === "today" || type === "weekly") && (
-          <div className={style["keyword-section"]}>
-            <KeywordBox
-              type={type}
-              title={type === "today" ? "인기 급상승" : "많은 사랑을 받은"}
-              subTitle={type === "today" ? "오늘의 키워드" : "이번주 키워드"}
-              onClickTagButton={onClickTag}
-              fetchData={fetchFeed}
-              setIsSameTag={setIsSameTag}
-            />
-          </div>
+          <KeywordFeedSection
+            type={type}
+            onClickTag={onClickTag}
+            fetchFeed={fetchFeed}
+            setIsSameTag={setIsSameTag}
+          />
         )}
 
         <div
@@ -256,29 +181,12 @@ export default function FeedPage() {
               : style["none_feed_scroll"]
           }
         >
-          <FeedList type={type} feedData={feedData} />
-          {/* {isLoading ? (
-            <></>
-          ) : // <MyPageLoading />
-          feedData.length > 0 ? (
-            feedData.map((feed, i) => {
-              return (
-                <FeedItem
-                  key={feed.feed.fid}
-                  feed={feed.feed}
-                  links={feed.feed.links}
-                />
-                // <Feed
-                //   key={`feed_${feed.feed.fid}`}
-                //   className={`${style["feed-box"]} ${style[getModeClass(mode)]}`}
-                //   feed={feed.feed}
-                // ></Feed>
-              );
-            })
+          {feedData.length > 0 ? (
+            <FeedList type={type} feedData={feedData} />
           ) : (
             <NoneFeed />
-          )} */}
-          {/* <div ref={targetRef} style={{ height: "1px" }}></div> */}
+          )}
+
           {/* {isFilterClicked && (
             <FilterModal
               onClickFilterButton={onClickFilterButton}
