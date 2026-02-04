@@ -1,8 +1,8 @@
-import BoardContent from "../BoardContent/BoardContent";
-import BoardTitle from "../BoardTitle/BoardTitle";
-import youtube from "../../img/youtube.svg";
-import naver from "../../img/naver.svg";
-import chzzz from "../../img/chzzz.svg";
+import BoardContent from "../BoardContent/BoardContent.tsx";
+import BoardTitle from "../BoardTitle/BoardTitle.tsx";
+import youtube from "@/img/youtube.svg";
+import naver from "@/img/naver.svg";
+import chzzz from "@/img/chzzz.svg";
 import "./index.css";
 
 export default function Board({ SetIsOpen, boardData }) {
@@ -11,19 +11,19 @@ export default function Board({ SetIsOpen, boardData }) {
       id: 0,
       name: "네이버",
       src: naver,
-      url: boardData.urls.Naver,
+      // url: boardData.urls.Naver,
     },
     {
       id: 1,
       name: "유튜브",
       src: youtube,
-      url: boardData.urls.TikTok,
+      // url: boardData.urls.TikTok,
     },
     {
       id: 2,
       name: "방송국",
       src: chzzz,
-      url: boardData.urls.TikTok,
+      // url: boardData.urls.TikTok,
     },
   ];
 
@@ -45,7 +45,11 @@ function BoardLink({ linkItem }) {
     <div className="LinkBox_container">
       {linkItem.map((item) => {
         return (
-          <div key={item.id} className="LinkBox" onClick={() => handleRequestURL(item.url)}>
+          <div
+            key={item.id}
+            className="LinkBox"
+            onClick={() => handleRequestURL(item.url)}
+          >
             <div className="LinkBox_img">
               <img src={item.src} alt="img" />
             </div>
