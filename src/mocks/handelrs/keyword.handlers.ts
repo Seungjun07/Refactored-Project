@@ -11,7 +11,7 @@ export const keywordHandlers = [
     return HttpResponse.json({
       success: true,
       body: {
-        hashtags: ["test 1", "test 2", "상품3"],
+        hashtags: ["팬아트", "굿즈", "토론"],
       },
     });
   }),

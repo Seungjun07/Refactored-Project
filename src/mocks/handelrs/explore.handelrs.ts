@@ -1,91 +1,164 @@
 import { BASE_URL } from "@/services/apis/mainApi";
 import { http, HttpResponse } from "msw";
 
-const PAGE_SIZE = 10;
-
 const FEED_CLASS = ["short", "long"] as const;
 
-type FeedRequestBody = {
-  key: number;
-};
-
-const starStore: Record<string, number> = {};
-const starFlagStore: Record<string, boolean> = {};
 const AIFilterStore: Record<string, boolean> = {};
 
-let mockFeeds = Array.from({ length: 30 }).map((_, i) => {
-  const fclass = FEED_CLASS[Math.floor(Math.random() * FEED_CLASS.length)];
+const createRandomComment = (id: number, fid: number) => {
+  const user = createRandomUser(id);
 
   return {
-    feed: {
-      fid: `${i + 1}`,
-      title: `Mock Feed ${i + 1}`,
-      body: `this is mock content ${i + 1}`,
-      bid: `${i + 1}`,
-      nickname: `${i}`,
-      date: "2026/01/30",
-      board: "자유게시판",
-      content: "테스트 내용입니다",
-      author: `사용자 ${i}`,
-      hashtag: [`test ${i}`],
-      createdAt: new Date().toISOString(),
-      star: 10,
-      is_owner: true,
-      star_flag: false,
-      is_reworked: true,
-      raw_body: `<h1>mock data ${i + 1}</h1>
-      <h2>hi</h2>`,
-      image:
-        fclass === "short"
-          ? [
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI18vvOl5pv3pCWW4-WTAbkhj-os3VfigS_g&s",
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI18vvOl5pv3pCWW4-WTAbkhj-os3VfigS_g&s",
-            ]
-          : [],
-      fclass,
-      num_comment: 5,
-      links: [
-        {
-          lid: `${i + 1}`,
-          title: "title 태그",
-          domain: "youtube",
-          explain: "설명",
-          url: "https://www.youtube.com/watch?v=5B7X1ej4IBQ&list=RD5B7X1ej4IBQ&start_radio=1",
-        },
-      ],
-    },
+    cid: `${fid}-${id + 1}`,
+    fid,
+    uid: user.uid,
+    uname: user.uname,
+    body: `Mock comment ${id + 1} for feed ${fid}`,
+    reply: [],
+    date: new Date(Date.now() - Math.floor(Math.random() * 1e7)).toISOString(),
+    like: false,
+    num_like_user: 5,
+    target_cid: null,
+    owner: Math.random() < 0.5,
+    mention: Math.random() < 0.5 ? "" : user.uname,
+    is_reworked: Math.random() < 0.5 ? true : false,
   };
+};
+const createRandomUser = (id: number) => ({
+  uid: `user-${id + 1}`,
+  uname: `User-${id + 1}`,
 });
 
+const createRandomFeed = (fid: number) => {
+  const fclass = FEED_CLASS[Math.floor(Math.random() * FEED_CLASS.length)];
+  const tags = ["팬아트", "이벤트", "토론", "굿즈", "후기"];
+
+  const numComments = Math.floor(Math.random() * 10) + 1;
+  const comments = Array.from({ length: numComments }).map((_, i) =>
+    createRandomComment(fid, i),
+  );
+
+  return {
+    fid: `${fid + 1}`,
+    body: `this is mock content ${fid + 1}`,
+    bid: `${fid + 1}`,
+    nickname: `User-${fid + 1}`,
+    date: "2026/01/30",
+    board: "자유게시판",
+    hashtag: [tags[Math.floor(Math.random() * tags.length)]],
+    createdAt: new Date().toISOString(),
+    star: Math.floor(Math.random() * 50),
+    is_owner: true,
+    star_flag: false,
+    is_reworked: true,
+    raw_body: `<h1>mock data ${fid + 1}</h1>
+      <h2>hi</h2>`,
+    image:
+      fclass === "short"
+        ? [
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI18vvOl5pv3pCWW4-WTAbkhj-os3VfigS_g&s",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI18vvOl5pv3pCWW4-WTAbkhj-os3VfigS_g&s",
+          ]
+        : [],
+    fclass,
+    num_comment: comments.length,
+    comments,
+    links: [
+      {
+        lid: `${fid + 1}`,
+        title: "title 태그",
+        domain: "youtube",
+        explain: "설명",
+        url: "https://www.youtube.com/watch?v=5B7X1ej4IBQ&list=RD5B7X1ej4IBQ&start_radio=1",
+      },
+    ],
+  };
+};
+
+let mockFeeds = Array.from({ length: 20 }, (_, i) => createRandomFeed(i));
+
 export const exploreHandlers = [
-  http.post(
-    `${BASE_URL}/feed_explore/feed_with_community`,
-    async ({ request }) => {
-      const body = (await request.json()) as FeedRequestBody;
-      console.log("POST body:", body);
-
-      const { key } = body;
-      const start = key * PAGE_SIZE;
-      const end = start + PAGE_SIZE;
-
-      const pageData = mockFeeds.slice(start, end);
-      console.log("dasdsad", pageData);
-
-      return HttpResponse.json({
-        success: true,
-        body: {
-          send_data: mockFeeds,
-          nextkey: key + 1,
-        },
-      });
-    },
-  ),
-
-  http.get(`${BASE_URL}/feed_explore/try_remove_feed`, ({ request }) => {
+  http.get(`${BASE_URL}/feeds`, ({ request }) => {
     const url = new URL(request.url);
-    const fid = url.searchParams.get("fid");
+    const type = url.searchParams.get("type") || "all";
+    const biasId = url.searchParams.get("biasId");
+    const cursor = url.searchParams.get("cursor");
+    const limit = parseInt(url.searchParams.get("limit") || "10");
+    const fclass = url.searchParams.get("fclass");
+    const category = url.searchParams.get("category");
+    const time = url.searchParams.get("time");
+    const hashtag = url.searchParams.get("hashtag");
+    const board = url.searchParams.get("board");
 
-    mockFeeds = mockFeeds.filter((feed) => feed.feed.fid !== fid);
+    console.log("MSW - GET /feeds", {
+      type,
+      biasId,
+      cursor,
+      limit,
+      fclass,
+      category,
+      time,
+      hashtag,
+      board,
+    });
+
+    // bias 필터
+    let filteredFeeds = biasId
+      ? mockFeeds.filter((feed) => feed.bid === biasId)
+      : [...mockFeeds];
+
+    // 해시태그 필터
+    if (hashtag) {
+      filteredFeeds = mockFeeds.filter((feed) =>
+        feed.hashtag.some((tag) => hashtag?.includes(tag ?? "")),
+      );
+    }
+
+    let startIndex = 0;
+
+    if (cursor) {
+      const cursorIndex = mockFeeds.findIndex((feed) => feed.fid === cursor);
+      if (cursorIndex !== -1) {
+        startIndex = cursorIndex + 1;
+      }
+    }
+
+    const endIndex = startIndex + limit;
+    const paginatedFeeds = filteredFeeds.slice(startIndex, endIndex);
+
+    const hasMore = endIndex < filteredFeeds.length;
+    const nextCursor =
+      hasMore && paginatedFeeds.length > 0
+        ? paginatedFeeds[paginatedFeeds.length - 1].fid
+        : null;
+
+    return HttpResponse.json({
+      success: true,
+      body: {
+        send_data: paginatedFeeds,
+        next_cursor: nextCursor,
+        hasMore,
+      },
+    });
+  }),
+
+  http.get(`${BASE_URL}/feeds/:fid`, ({ params }) => {
+    const { fid } = params;
+
+    console.log("MSW detail Feed: ", fid);
+    const feed = mockFeeds.find((item) => item.fid === fid);
+
+    return HttpResponse.json({
+      body: {
+        feed,
+      },
+    });
+  }),
+
+  http.delete(`${BASE_URL}/feeds/:fid`, ({ params }) => {
+    const { fid } = params;
+
+    mockFeeds = mockFeeds.filter((feed) => feed.fid !== fid);
 
     return HttpResponse.json({
       body: {
@@ -94,34 +167,30 @@ export const exploreHandlers = [
     });
   }),
 
-  http.get(`${BASE_URL}/feed_explore/check_star`, ({ request }) => {
-    const url = new URL(request.url);
-    const fid = url.searchParams.get("fid")!;
+  http.post(`${BASE_URL}/feeds/:fid/star`, ({ params }) => {
+    const { fid } = params;
 
-    console.log("LIKE", fid, starStore[fid]);
+    const feed = mockFeeds.find((item) => item.fid === fid);
 
-    const feed = mockFeeds.find((item) => item.feed.fid === fid);
-    const currentFlag = starFlagStore[fid] ?? feed?.feed.star_flag ?? false;
+    if (!feed) return HttpResponse.json({ success: false }, { status: 404 });
 
-    if (currentFlag) {
-      // 좋아요 취소
-      starFlagStore[fid] = false;
-      starStore[fid] = (starStore[fid] ?? feed?.feed.star ?? 0) - 1;
-    } else {
-      // 좋아요 추가
-      starFlagStore[fid] = true;
-      starStore[fid] = (starStore[fid] ?? feed?.feed.star ?? 0) + 1;
-    }
+    const newStarFlag = !feed.star_flag;
+    const newStar = newStarFlag ? feed.star + 1 : feed.star - 1;
+
+    feed.star = newStar;
+    feed.star_flag = newStarFlag;
+
+    console.log(
+      "MSW: updated STAR",
+      { star: feed.star },
+      { star_flag: feed.star_flag },
+    );
 
     return HttpResponse.json({
-      send_data: {
-        feed: {
-          fid,
-          star: starStore[fid],
-          star_flag: starFlagStore[fid],
-        },
+      body: {
+        star: feed.star,
+        star_flag: feed.star_flag,
       },
-      nextKey: 0,
     });
   }),
 
@@ -129,10 +198,8 @@ export const exploreHandlers = [
     const url = new URL(request.url);
     const fid = url.searchParams.get("fid")!;
 
-    console.log("ORIGIN", fid, starStore[fid]);
-
-    const feed = mockFeeds.find((item) => item.feed.fid === fid);
-    const currentFlag = AIFilterStore[fid] ?? feed?.feed.is_reworked ?? false;
+    const feed = mockFeeds.find((item) => item.fid === fid);
+    const currentFlag = AIFilterStore[fid] ?? feed?.is_reworked ?? false;
 
     if (currentFlag) {
       // 좋아요 취소
@@ -153,67 +220,6 @@ export const exploreHandlers = [
     });
   }),
 
-  http.get(
-    `${BASE_URL}/feed_explore/search_feed_with_hashtag`,
-    ({ request }) => {
-      console.log("MSW hashtag search: ");
-      const url = new URL(request.url);
-      const hashtag = url.searchParams.get("hashtag");
-      const targetTime = url.searchParams.get("target_time");
-      const key = Number(url.searchParams.get("key"));
-
-      const filteredFeeds = mockFeeds.filter((item) =>
-        item.feed.hashtag.some((tag) => tag.includes(hashtag ?? "")),
-      );
-      console.log(filteredFeeds);
-
-      const start = key * PAGE_SIZE;
-      const end = start + PAGE_SIZE;
-
-      const pageData = filteredFeeds.slice(start, end);
-
-      return HttpResponse.json({
-        body: {
-          send_data: pageData,
-          nextKey: 0,
-        },
-      });
-    },
-  ),
-
-  http.get(`${BASE_URL}/feed_explore/:date_best`, ({ request, params }) => {
-    const { date_best } = params;
-
-    const url = new URL(request.url);
-    const key = Number(url.searchParams.get("key") ?? 0);
-
-    const start = key * PAGE_SIZE;
-    const end = start + PAGE_SIZE;
-
-    const pageData = mockFeeds.slice(start, end);
-
-    // console.log("MSW HIT:", date_best, key);
-
-    return HttpResponse.json({
-      body: {
-        send_data: pageData,
-        nextKey: key + 1,
-      },
-    });
-  }),
-
-  http.post(`${BASE_URL}/feed_explore/all_feed`, async ({ request }) => {
-    const body = await request.json();
-    console.log("POST body:", body);
-
-    return HttpResponse.json({
-      success: true,
-      body: {
-        send_data: applyStarState(mockFeeds),
-      },
-    });
-  }),
-
   http.post(`${BASE_URL}/nova_sub_system/image_tag`, async ({ request }) => {
     const body = await request.json();
     console.log("POST body:", body);
@@ -225,33 +231,4 @@ export const exploreHandlers = [
       },
     });
   }),
-
-  http.get(`${BASE_URL}/feed_explore/feed_detail/feed_data`, ({ request }) => {
-    console.log("MSW detail search: ");
-    const url = new URL(request.url);
-    const fid = url.searchParams.get("fid");
-
-    const feed = mockFeeds.find((item) => item.feed.fid === fid);
-
-    return HttpResponse.json({
-      body: {
-        feed: feed,
-      },
-    });
-  }),
 ];
-
-function applyStarState(feeds: typeof mockFeeds) {
-  return feeds.map((item) => {
-    const fid = item.feed.fid;
-    return {
-      ...item,
-      feed: {
-        ...item.feed,
-        star: starStore[fid] ?? item.feed.star,
-        star_flag: starFlagStore[fid] ?? item.feed.star_flag,
-        is_reworked: AIFilterStore[fid] ?? item.feed.is_reworked,
-      },
-    };
-  });
-}
