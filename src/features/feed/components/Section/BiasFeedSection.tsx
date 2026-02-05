@@ -14,8 +14,17 @@ export default function BiasFeedSection({ feedData }: BiasFeedSection) {
   const { selectedBias } = useBiasStore();
   const { scrollRef, hasDragged, dragHandlers } = useDragScroll();
   const { open, close, activeModal } = useModalStore();
+
   function handleCategoryClick() {
     open("CATEGORY");
+  }
+
+  const isOpen = activeModal !== null;
+
+  if (isOpen) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
   }
 
   return (
@@ -48,14 +57,8 @@ export default function BiasFeedSection({ feedData }: BiasFeedSection) {
         </p>
       </div>
 
-      {activeModal === "CATEGORY" && (
-        <CategoryModal
-          onClose={close}
-          // SetIsOpen={setIsOpendCategory}
-          // onClickCategory={onClickCategory}
-          biasId={selectedBias?.bid}
-          // isOpend={isOpendCategory}
-        />
+      {activeModal === "CATEGORY" && selectedBias && (
+        <CategoryModal isOpen={isOpen} onClose={close} />
       )}
     </div>
   );

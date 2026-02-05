@@ -1,11 +1,16 @@
+import {
+  useFilterStore,
+  type FclassType,
+} from "@/stores/FilterStore/useFilterStore";
 import "./FilterModal.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import FilterSection from "./FilterSection";
 
-let FilterData = [
+const CATEGORY_FILTERS = [
   {
     id: 0,
-    value: "공지사항",
-    name: "공지사항",
+    value: "유머게시판",
+    name: "유머게시판",
   },
   {
     id: 1,
@@ -19,8 +24,8 @@ let FilterData = [
   },
   {
     id: 3,
-    value: "유머게시판",
-    name: "유머게시판",
+    value: "스토리게시판",
+    name: "스토리게시판",
   },
   {
     id: 4,
@@ -29,61 +34,36 @@ let FilterData = [
   },
 ];
 
-let ContentData = [
+const FCLASS_FILTERS: { id: number; value: FclassType; name: string }[] = [
   { id: 0, value: "short", name: "모멘트" },
   { id: 1, value: "long", name: "포스트" },
   { id: 2, value: "", name: "전체" },
 ];
 
-export default function FilterModal({
-  onClickFilterButton,
-  setFilterCategory,
-  setFilterFclass,
-  fetchAllFeed,
-  onClickApplyButton1,
-}) {
-  let [filterBoard, setFilterBoard] = useState(JSON.parse(localStorage.getItem("board")) || [""]);
+interface FilterModalProps {
+  onClose: () => void;
+}
+export default function FilterModal({ onClose }: FilterModalProps) {
+  const { fclass, category, setFclass, setCategory } = useFilterStore();
+  const [draftCategory, setDraftCategory] = useState(category);
+  const [draftFclass, setDraftFclass] = useState(fclass);
 
-  let [isClickedFilterContent, setIsClickedFilterContent] = useState(
-    JSON.parse(localStorage.getItem("content")) || ""
-  );
-
-  useEffect(() => {
-    localStorage.setItem("board", JSON.stringify(filterBoard));
-    localStorage.setItem("content", JSON.stringify(isClickedFilterContent));
-  }, [filterBoard, isClickedFilterContent]);
-
-  function onClickFilterBoard(name, value, i) {
-    setFilterBoard((prev) => {
-      if (prev.includes(value)) {
-        return prev.filter((item) => item !== value);
-      }
-      return value === "" ? [value] : [...prev.filter((item) => item !== ""), value];
-    });
-    setFilterCategory((prev) => {
-      const data = FilterData[i].value;
-      if (prev.includes(data)) {
-        return prev.filter((item) => item !== data);
-      }
-      return i === 4 ? [data] : [...prev.filter((item) => item !== FilterData[4].value), data];
-    });
+  function handleFilterCategory(value: string) {
+    setDraftCategory(value);
   }
 
-  function onClickFilterContent(name, value, i) {
-    setIsClickedFilterContent(value);
-    setFilterFclass(ContentData[i].value);
-    let selectContent = value;
-    localStorage.setItem("content", JSON.stringify(selectContent));
+  function handleFilterContent(value: FclassType) {
+    setDraftFclass(value);
   }
 
-  function onClickApplyButton2() {
-    onClickApplyButton1();
-    fetchAllFeed(true);
-    onClickFilterButton();
+  function handleApply() {
+    setCategory(draftCategory);
+    setFclass(draftFclass);
+    onClose();
   }
 
   return (
-    <div className="wrapper-container" onClick={onClickFilterButton}>
+    <div className="wrapper-container" onClick={onClose}>
       <div
         className="FilterModal"
         onClick={(e) => {
@@ -95,52 +75,25 @@ export default function FilterModal({
           <p>보고 싶은 게시글만 보여질 수 있도록, 지금 바로 경험해보세요.</p>
         </div>
 
-        <div className="FilterModal_kind">
-          <h5>
-            게시글 종류 <span>(중복선택 가능)</span>
-          </h5>
-          <div className="button_container">
-            {FilterData.map((data, i) => {
-              return (
-                <button
-                  className={`${filterBoard.includes(data.value) ? "clicked_button" : ""}`}
-                  key={data.id}
-                  onClick={() => onClickFilterBoard(data.name, data.value, i)}
-                >
-                  {data.name}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <FilterSection
+          title={"게시글 종류"}
+          options={CATEGORY_FILTERS}
+          onClickOption={handleFilterCategory}
+          value={draftCategory}
+        />
 
-        <div className="FilterModal_kind">
-          <h5>컨텐츠 종류</h5>
-          <div className="button_container">
-            {ContentData.map((data, i) => {
-              return (
-                <button
-                  className={isClickedFilterContent === data.value ? "clicked_button" : ""}
-                  key={data.id}
-                  onClick={() => onClickFilterContent(data.name, data.value, i)}
-                >
-                  {data.name}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <FilterSection
+          title={"컨텐츠 종류"}
+          options={FCLASS_FILTERS}
+          onClickOption={handleFilterContent}
+          value={draftFclass}
+        />
 
         <div className="FilterModal_buttons">
-          <button className="close_button" onClick={onClickFilterButton}>
+          <button className="close_button" onClick={onClose}>
             닫기
           </button>
-          <button
-            className="apply_button"
-            onClick={() => {
-              onClickApplyButton2();
-            }}
-          >
+          <button className="apply_button" onClick={handleApply}>
             적용
           </button>
         </div>
