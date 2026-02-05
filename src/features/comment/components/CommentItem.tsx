@@ -12,14 +12,6 @@ export default function CommentItem({
   onRemove,
   onReply,
 }: CommentItemProps) {
-  //   async function fetchOriginalComment(cid) {
-  //     await mainApi
-  //       .get(`feed_explore/original_comment_data?cid=${cid}`)
-  //       .then((res) => {
-  //         //console.log("ccc", res.data);
-  //       });
-  //   }
-
   return (
     <div
       key={comment.cid}
@@ -34,18 +26,6 @@ export default function CommentItem({
           <div className={style["user-name"]}>{comment.uname}</div>
 
           <div className={style["function_button_container"]}>
-            {/* {comment.is_reworked && (
-              <button
-                className={style["AI_text"]}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                //   fetchOriginalComment(comment.cid);
-                }}
-              >
-                원문 보기
-              </button>
-            )} */}
             {comment.owner ? (
               <div
                 className={style["comment-delete-report"]}

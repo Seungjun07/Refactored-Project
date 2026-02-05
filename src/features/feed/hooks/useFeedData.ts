@@ -11,7 +11,7 @@ import type { FeedQueryParams } from "../types/feed.api.type";
 interface UseFeedDataParams {
   type?: "today" | "weekly" | "all" | "bias";
   filterCategory?: string;
-  filterFclass?: "short" | "long";
+  filterFclass?: "short" | "long" | "";
   biasId?: string;
   board?: string;
   tag?: string;
@@ -32,13 +32,15 @@ export function useFeedData({
 
   // 피드 데이터
   async function fetchFeed(reset = false) {
+    if (reset) resetFeed();
+
     setIsLoading(true);
 
     let time;
 
     const params: FeedQueryParams = {
       type,
-      cursor: nextCursor,
+      cursor: reset ? null : nextCursor,
     };
 
     if (type === "today" || type === "weekly") {
@@ -104,9 +106,6 @@ export function useFeedData({
     const prevStarFlag = feed.star_flag;
 
     // 2. optimistic update
-    const newStarFlag = !feed?.star_flag;
-    const newStar = newStarFlag ? feed.star + 1 : feed.star - 1;
-
     setFeedData((prev) =>
       prev.map((feed) =>
         feed.fid === fid
@@ -148,7 +147,6 @@ export function useFeedData({
   }
 
   useEffect(() => {
-    resetFeed();
     fetchFeed(true);
   }, [type, biasId, filterCategory, filterFclass, board, tag]);
 

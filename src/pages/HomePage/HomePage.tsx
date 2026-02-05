@@ -1,24 +1,20 @@
 import all_post from "@/img/all_post.png";
 import best from "@/img/best.png";
 import new_pin from "@/img/new_pin.png";
-
-// import useTagStore from "../../stores/TagStore/useTagStore.js";
-// import LoadingPage from "../LoadingPage/LoadingPage.js";
 import "@/App.css";
+
 import Header from "@/component/Header/Header.tsx";
 import SearchBox from "@/component/SearchBox.tsx";
 import Banner from "@/component/Banner/Banner.tsx";
 import BiasBoxes from "@/features/bias/components/BiasBoxes";
 import AllPost from "@/component/AllPost/AllPost.tsx";
-// import NavBar from "@/component/NavBar/NavBar.tsx";
-import { useHomeFeed } from "@/features/feed/hooks/useHomeFeed.ts";
 import FeedThumbnail from "@/features/feed/components/Thumbnail/FeedThumbnail";
+
+import { useHomeFeed } from "@/features/feed/hooks/useHomeFeed.ts";
 
 export default function HomePage() {
   const { biasFeeds, todayBestFeed, weeklyBestFeed, allFeed } = useHomeFeed();
-  // if (isLoading) {
-  //   return <LoadingPage />;
-  // }
+
   return (
     <div className={`container`}>
       <div className={`top-area`}>
@@ -77,7 +73,6 @@ export default function HomePage() {
           <AllPost feedData={allFeed} />
         </FeedThumbnail>
       </section>
-      {/* <NavBar /> */}
     </div>
   );
 }

@@ -6,7 +6,6 @@ import { http, HttpResponse } from "msw";
 export const handlers = [
   http.get(`${BASE_URL}/home/banner`, ({ request }) => {
     // 요청 헤더 확인 (디버깅용)
-    console.log("MSW intercepted:", request.url);
 
     // 임시 응답 데이터
     return HttpResponse.json({

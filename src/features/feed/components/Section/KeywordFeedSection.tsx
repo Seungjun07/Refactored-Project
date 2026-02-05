@@ -4,13 +4,11 @@ import style from "@/pages/FeedPage/FeedHashList.module.css";
 interface KeywordFeedSectionProps {
   type: "today" | "weekly";
   onClickTag: (tag: string) => void;
-  setIsSameTag: (value: boolean) => void;
 }
 
 export default function KeywordFeedSection({
   type,
   onClickTag,
-  setIsSameTag,
 }: KeywordFeedSectionProps) {
   if (!type) return null;
 
@@ -24,7 +22,6 @@ export default function KeywordFeedSection({
         title={title}
         subTitle={subTitle}
         onClickTag={onClickTag}
-        setIsSameTag={setIsSameTag}
       />
     </div>
   );

@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 
 export default function useIntersectionObserver(
-  callback,
-  options = {},
-  hasMore,
+  callback: () => void,
+  options: IntersectionObserverInit = {},
+  hasMore: boolean,
 ) {
   const targetRef = useRef(null);
 

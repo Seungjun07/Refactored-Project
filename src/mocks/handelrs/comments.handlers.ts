@@ -15,13 +15,11 @@ let mockComments = Array.from({ length: 5 }).map((_, i) => ({
 export const commentsHandlers = [
   http.get(`${BASE_URL}/feed_explore/remove_comment`, ({ request }) => {
     // 요청 헤더 확인 (디버깅용)
-    console.log("MSW intercepted:", request.url);
     const url = new URL(request.url);
     const fid = url.searchParams.get("fid");
     const cid = url.searchParams.get("cid");
 
     mockComments = mockComments.filter((comment) => comment.cid !== cid);
-    console.log(mockComments);
 
     // 임시 응답 데이터
     return HttpResponse.json({
@@ -35,7 +33,6 @@ export const commentsHandlers = [
     `${BASE_URL}/feed_explore/feed_detail/comment_data`,
     ({ request }) => {
       // 요청 헤더 확인 (디버깅용)
-      console.log("MSW intercepted:", request.url);
       const url = new URL(request.url);
       const fid = url.searchParams.get("fid");
 
@@ -52,7 +49,6 @@ export const commentsHandlers = [
     const body = await request.json();
 
     const { fid, body: comment, target_cid } = body.body;
-    console.log("makecpmmem", body);
     const newComment = {
       fid,
       body: comment,

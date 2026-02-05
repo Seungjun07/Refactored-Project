@@ -9,7 +9,7 @@ export interface FeedQueryParams {
   limit?: number;
   category?: string;
   time?: "today" | "weekly";
-  fclass?: "short" | "long";
+  fclass?: "short" | "long" | "";
 }
 
 export interface FeedResponse {

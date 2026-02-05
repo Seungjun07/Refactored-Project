@@ -2,28 +2,25 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import useBiasStore from "../../stores/BiasStore/useBiasStore.js";
-
-import { getModeClass } from "../../App.js";
-// import FilterModal from "../../component/FilterModal/FilterModal.js";
-// import CategoryModal from "../../component/CategoryModal/CategoryModal.js";
-import NoneFeed from "../../component/NoneFeed/NoneFeed.js";
-import Header from "../../component/Header/Header.js";
+import { useBoardStore } from "@/stores/BoardStore/useBoardStore.ts";
+import { useFilterStore } from "@/stores/FilterStore/useFilterStore.ts";
+import { useFeedData } from "@/features/feed/hooks/useFeedData.js";
 
 import "@toast-ui/editor/dist/toastui-editor-viewer.css";
 import style from "./FeedHashList.module.css";
-import LoadingPage from "../LoadingPage/LoadingPage.js";
-import { useFeedData } from "@/features/feed/hooks/useFeedData.js";
+
+import NoneFeed from "../../component/NoneFeed/NoneFeed.js";
+import Header from "../../component/Header/Header.js";
 import FeedList from "@/features/feed/components/FeedList.js";
 import FeedSearchSection from "@/features/feed/components/Section/FeedSearchSection.js";
 import KeywordFeedSection from "@/features/feed/components/Section/KeywordFeedSection.js";
 import BiasFeedSection from "@/features/feed/components/Section/BiasFeedSection.js";
-// import MyPageLoading from "../LoadingPage/MypageLoading.js";
 
 export default function FeedPage() {
   // url 파라미터 가져오기
   const [params] = useSearchParams();
+  const [tag, setTag] = useState("");
 
-  const brightModeFromUrl = params.get("brightMode");
   const FEED_TYPES = ["today", "weekly", "all", "bias"] as const;
   type FeedType = (typeof FEED_TYPES)[number];
 
@@ -35,100 +32,39 @@ export default function FeedPage() {
 
   // 전역 상태 관리
   let { selectedBias } = useBiasStore();
-
-  // 드래그 기능
-  let [isFilterClicked, setIsFilterClicked] = useState(false);
-
-  let [nextData, setNextData] = useState(0);
-
-  const [isSameTag, setIsSameTag] = useState(true);
-  const [tag, setTag] = useState("");
-
-  const initialMode =
-    brightModeFromUrl || localStorage.getItem("brightMode") || "bright"; // URL에서 가져오고, 없으면 로컬 스토리지에서 가져옴
-  const [mode, setMode] = useState(initialMode);
-
-  let [filterCategory, setFilterCategory] = useState(
-    JSON.parse(localStorage.getItem("board")) || [""],
-  );
-  let [filterFclass, setFilterFclass] = useState(
-    JSON.parse(localStorage.getItem("content")) || "",
-  );
-
-  function onClickApplyButton1() {
-    setNextData(-1);
-  }
-
-  async function fetchAllFeed() {
-    // let updatedNextData = 0;
-    //  만약 적용 버튼을 누르면 -1로 세팅
-    // if (clickedFetch) {
-    //   updatedNextData = -1;
-    //   setNextData(-1);
-    // }
-    // 그게 아닌 상황에서는 기존의 nextData 를 사용
-    // else {
-    //   updatedNextData = nextData;
-    // }
-    // const data = await fetchAllFeedList(nextData, filterCategory, filterFclass);
-    // setFeedData(data.body.send_data);
-    // setNextData(data.body.key);
-    // setHasMore(data.body.send_data.length > 0);
-    // setIsLoading(false);
-  }
+  const { selectedBoard } = useBoardStore();
+  const { fclass, category } = useFilterStore();
 
   const { feedData, fetchFeed, toggleLike, isLoading, hasMore } = useFeedData({
     type,
-    filterCategory,
-    filterFclass,
+    filterCategory: category,
+    filterFclass: fclass,
     biasId: selectedBias?.bid,
-    board: "",
+    board: selectedBoard,
     tag,
   });
 
-  // useEffect(() => {
-  //   if (isSameTag) {
-  //     setHasMore(true);
-  //   } else {
-  //     setHasMore(false);
-  //   }
-  // }, [isSameTag]);
-
-  function onClickTag(tag: string) {
-    setTag(tag);
-  }
-
-  // 모달 창 - 전체 피드 목록
-
-  function onClickFilterButton() {
-    setIsFilterClicked(!isFilterClicked);
+  function onClickTag(clickedTag: string) {
+    setTag((prev) => {
+      return prev === clickedTag ? "" : clickedTag;
+    });
   }
 
   function loadMore() {
-    if (!isLoading && hasMore) fetchFeed();
-  }
+    if (!hasMore || isLoading) return;
 
-  // if (isFilterClicked) {
-  //   document.body.style.overflow = "hidden";
-  // } else {
-  //   document.body.style.overflow = "auto";
-  // }
+    fetchFeed();
+  }
 
   return (
     <div className={`all-box ${style["all_container"]}`}>
-      <div className={`${style["container"]} ${style[getModeClass(mode)]}`}>
+      <div className={`${style["container"]} `}>
         <Header />
         {type === "bias" && <BiasFeedSection feedData={feedData} />}
-        {type === "all" && (
-          <FeedSearchSection onFilterClick={onClickFilterButton} />
-        )}
+        {type === "all" && <FeedSearchSection />}
 
         {(type === "today" || type === "weekly") && (
-          <KeywordFeedSection
-            type={type}
-            onClickTag={onClickTag}
-            setIsSameTag={setIsSameTag}
-          />
+          <KeywordFeedSection type={type} onClickTag={onClickTag} />
         )}
 
         <div
@@ -140,27 +76,16 @@ export default function FeedPage() {
         >
           {feedData.length > 0 ? (
             <FeedList
-              type={type}
               feedData={feedData}
               onLoadMore={loadMore}
               toggleLike={toggleLike}
+              hasMore={hasMore}
             />
           ) : (
             <NoneFeed />
           )}
-
-          {/* {isFilterClicked && (
-            <FilterModal
-              onClickFilterButton={onClickFilterButton}
-              setFilterCategory={setFilterCategory}
-              setFilterFclass={setFilterFclass}
-              fetchAllFeed={fetchAllFeed}
-              onClickApplyButton1={onClickApplyButton1}
-            />
-          )} */}
         </div>
       </div>
-      {/* <NavBar /> */}
     </div>
   );
 }

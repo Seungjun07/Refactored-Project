@@ -8,7 +8,6 @@ interface KeywordBoxProps {
   title: string;
   subTitle: string;
   onClickTag: (tag: string) => void;
-  setIsSameTag: (value: boolean) => void;
 }
 
 export default function KeywordBox({
@@ -16,7 +15,6 @@ export default function KeywordBox({
   title,
   subTitle,
   onClickTag,
-  setIsSameTag,
 }: KeywordBoxProps) {
   const { scrollRef, hasDragged, dragHandlers } = useDragScroll();
   const { tags } = useBestHashtags(type);
@@ -26,11 +24,10 @@ export default function KeywordBox({
   function handleTagClick(index: number, tag: string) {
     if (activeIndex === index) {
       setActiveIndex(null);
-      setIsSameTag(true);
+      onClickTag("");
       return;
     }
 
-    setIsSameTag(false);
     setActiveIndex(index);
     onClickTag(tag);
   }
