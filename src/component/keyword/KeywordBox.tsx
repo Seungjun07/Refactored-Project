@@ -8,7 +8,6 @@ interface KeywordBoxProps {
   title: string;
   subTitle: string;
   onClickTag: (tag: string) => void;
-  fetchData: () => Promise<void>;
   setIsSameTag: (value: boolean) => void;
 }
 
@@ -17,7 +16,6 @@ export default function KeywordBox({
   title,
   subTitle,
   onClickTag,
-  fetchData,
   setIsSameTag,
 }: KeywordBoxProps) {
   const { scrollRef, hasDragged, dragHandlers } = useDragScroll();
@@ -28,7 +26,6 @@ export default function KeywordBox({
   function handleTagClick(index: number, tag: string) {
     if (activeIndex === index) {
       setActiveIndex(null);
-      fetchData();
       setIsSameTag(true);
       return;
     }

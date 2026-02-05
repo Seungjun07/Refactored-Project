@@ -38,6 +38,9 @@ const createRandomFeed = (fid: number) => {
     createRandomComment(fid, i),
   );
 
+  const bids = ["1", "2", "3"];
+  const bid = bids[Math.floor(Math.random() * bids.length)];
+
   return {
     fid: `${fid + 1}`,
     body: `this is mock content ${fid + 1}`,

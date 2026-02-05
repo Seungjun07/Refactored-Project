@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import search_icon from "./../img/home_search.svg";
-import style from "./feed-list/FeedThumbnail.module.css";
+import style from "@/features/feed/components/Thumbnail/FeedThumbnail.module.css";
 
 interface SearchBoxProps {
   type?: string;

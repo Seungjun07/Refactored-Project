@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import style from "./StoryFeed.module.css";
-import type { Feed, FeedType } from "@/features/feed/types/feed";
+import type { FeedType } from "@/features/feed/types/feed";
 
 interface StoryFeedProps {
   feedData: FeedType;
   type?: "home";
-  hasDragged: boolean;
+  hasDragged?: boolean;
 }
 export default function StoryFeed({
   feedData,

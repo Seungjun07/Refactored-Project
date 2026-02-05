@@ -11,11 +11,7 @@ import BiasList from "@/features/bias/components/BiasList.tsx";
 import useDragScroll from "../../../hooks/useDragScroll.ts";
 import type { Bias } from "@/features/bias/types/bias.ts";
 
-export default function BiasBoxes({
-  fetchBiasCategoryData,
-}: {
-  fetchBiasCategoryData: () => void;
-}) {
+export default function BiasBoxes() {
   const navigate = useNavigate();
   const { scrollRef, hasDragged, dragHandlers } = useDragScroll();
   let { biasList, loading, selectedBias, fetchBiasList, setSelectedBias } =
@@ -32,8 +28,6 @@ export default function BiasBoxes({
     if (hasDragged) return;
 
     setSelectedBias(bias);
-
-    fetchBiasCategoryData();
   }
 
   function handleAddButton() {

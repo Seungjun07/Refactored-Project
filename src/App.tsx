@@ -1,6 +1,5 @@
 import "./App";
 import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
 // import MyPage from "./pages/MyPage/Mypage.js";
 // import MyPageEdit from "./pages/MyPage/MypageEdit.js";
 // import NOVALogin from "./pages/NovaLogin/NovaLogin.js";
@@ -9,24 +8,21 @@ import { Routes, Route } from "react-router-dom";
 // import Temrs from "./pages/Temrs/Temrs.js";
 // import FindPw from "./pages/FindPw/FindPw.js";
 // import FindPwChange from "./pages/FindPw/FindPwChange.js";
-// import FeedList from "./pages/FeedList/FeedList.js";
-// // import NavBar from "./component/NavBar/NavBar.js";
+// import NavBar from "./component/NavBar/NavBar.js";
 // import NovaFunding from "./pages/NovaFunding/NovaFunding.js";
 // import LikeFunding from "./pages/NovaFunding/LikeFunding/LikeFunding.js";
 // import DuckFunding from "./pages/NovaFunding/DuckFunding/DuckFunding.js";
 // import SuccessFunding from "./pages/NovaFunding/DuckFunding/SuccessFunding.js";
-// // import RankingFunding from "./pages/NovaFunding/FundingRanking/FundingRanking.js";
-// // import OpenRanking from "./pages/NovaFunding/FundingRanking/OpenRanking.js";
-// // import BiasFunding from "./pages/NovaFunding/BiasFunding/BiasFunding.js";
-// // import MoreProjects from "./pages/NovaFunding/BiasFunding/MoreProjects.js";
-// // import EventCard from "./component/EventCard/EventCard.js";
+// import RankingFunding from "./pages/NovaFunding/FundingRanking/FundingRanking.js";
+// import OpenRanking from "./pages/NovaFunding/FundingRanking/OpenRanking.js";
+// import BiasFunding from "./pages/NovaFunding/BiasFunding/BiasFunding.js";
+// import MoreProjects from "./pages/NovaFunding/BiasFunding/MoreProjects.js";
+// import EventCard from "./component/EventCard/EventCard.js";
 // import FollowPage from "./pages/FollowPage/FollowPage.js";
-// import FeedDetail from "./pages/FeedDetail/FeedDetail.js";
 // import Write from "./pages/Write/Write.js";
 // import SearchPage from "./pages/SearchPage/SearchPage.js";
 // import SearchResultPage from "./pages/SearchResultPage/SearchResultPage.js";
 // import NoticePage from "./pages/NoticePage/NoticePage.js";
-import HomePage from "./pages/HomePage/HomePage.js";
 import RootRoute from "./root-route.js";
 // import ReportPage from "./pages/ReportPage/ReportPage.js";
 // import SearchSchedulePage from "./pages/SearchSchedulePage/SearchSchedulePage.js";
@@ -111,12 +107,6 @@ function App() {
     /* <Route path="/write_feed" element={<Write />}>
         <Route path=":type" element={<Write />}></Route>
       </Route>
-      <Route
-        path="/feed_list"
-        element={<FeedList brightMode={brightMode} />}
-      ></Route>
-      <Route path="/feed_list/:fid" element={<FeedList />}></Route>
-      <Route path="/feed_detail/:fid" element={<FeedDetail />}></Route>
       <Route path="/follow_page" element={<FollowPage />}></Route> */
   }
 

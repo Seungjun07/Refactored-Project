@@ -3,9 +3,15 @@ import ReportButton from "@/component/Interaction/ReportButton";
 import style from "@/pages/FeedPage/FeedPage.module.css";
 import { useNavigate } from "react-router-dom";
 import comment from "@/img/comment.png";
-import type { Feed, FeedType } from "../../types/feed";
+import type { FeedType } from "../../types/feed";
 
-export default function FeedActions({ feed }: { feed: FeedType }) {
+export default function FeedActions({
+  feed,
+  onToggleLike,
+}: {
+  feed: FeedType;
+  onToggleLike: () => void;
+}) {
   const navigate = useNavigate();
 
   function handleNavigate(fid: string) {
@@ -23,9 +29,9 @@ export default function FeedActions({ feed }: { feed: FeedType }) {
       <div className={style["button-box1"]}>
         <div className={style["action-button"]}>
           <LikeStarButton
-            fid={feed.fid}
             isLiked={feed.star_flag}
             likeCount={feed.star}
+            onToggleLike={onToggleLike}
           />
         </div>
 

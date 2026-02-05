@@ -1,30 +1,17 @@
 import useBiasStore from "@/stores/BiasStore/useBiasStore";
-import { useEffect } from "react";
-import useFetchFeedData from "./useFetchFeedData";
-import { useFetchFeedWithBias } from "./useFetchFeedWithBias";
+import { useFeedData } from "./useFeedData";
 
 export function useHomeFeed() {
-  const { data: todayBestFeed } = useFetchFeedData(`/home/today_best`);
-  const { data: weeklyFeed } = useFetchFeedData(`/home/weekly_best`);
-  const { data: allFeed } = useFetchFeedData(`/home/all_feed`);
-
   let { selectedBias } = useBiasStore();
-
-  const { feedData: biasFeed, fetchBiasCategoryData } = useFetchFeedWithBias();
-
-  useEffect(() => {
-    fetchBiasCategoryData();
-  }, [selectedBias]);
+  const todayBestFeed = useFeedData({ type: "today" });
+  const weeklyBestFeed = useFeedData({ type: "weekly" });
+  const allFeed = useFeedData({ type: "all" });
+  const biasFeeds = useFeedData({ type: "bias", biasId: selectedBias?.bid });
 
   return {
-    feeds: {
-      todayBestFeed,
-      weeklyFeed,
-      allFeed,
-      biasFeed,
-    },
-    biasActions: {
-      fetchBiasCategoryData,
-    },
+    todayBestFeed: todayBestFeed.feedData ?? [],
+    weeklyBestFeed: weeklyBestFeed.feedData ?? [],
+    allFeed: allFeed.feedData ?? [],
+    biasFeeds: biasFeeds.feedData ?? [],
   };
 }

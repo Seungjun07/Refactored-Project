@@ -9,32 +9,6 @@ import FeedBody from "./FeedBody.js";
 import type { FeedType } from "../../types/feed.js";
 import useDragScroll from "@/hooks/useDragScroll.ts";
 
-// const header = HEADER;
-
-// export function Feed({ feed, setFeedData, type }) {
-
-//   const [report, setReport] = useState();
-
-//   async function fetchReportResult(fid) {
-//     await postApi.post("nova_sub_system/try_report", {
-//       header: header,
-//       body: {
-//         fid: fid,
-//       },
-//     });
-//     //.then((res) => //console.log("rerere", res.data));
-//   }
-
-//   return (
-//     <>
-//       <ContentFeed
-//         feed={feed}
-//         // handleCheckStar={handleCheckStar}
-//         fetchReportResult={fetchReportResult}
-//       />
-//     </>
-//   );
-// }
 type Link = {
   lid: string;
   title: string;
@@ -46,9 +20,15 @@ interface FeedItemProps {
   detailPage?: boolean;
   feed: FeedType;
   links?: Link[];
+  onToggleLike: () => void;
 }
 
-export default function FeedItem({ detailPage, feed, links }: FeedItemProps) {
+export default function FeedItem({
+  detailPage,
+  feed,
+  links,
+  onToggleLike,
+}: FeedItemProps) {
   let navigate = useNavigate();
   const drag = useDragScroll();
 
@@ -59,12 +39,9 @@ export default function FeedItem({ detailPage, feed, links }: FeedItemProps) {
   return (
     <div
       className={`${style["wrapper-container"]} ${feed.fclass === "long" && style["long-wrapper"]}`}
-      onClick={(e) => {
-        if (drag.hasDragged) {
-          e.preventDefault();
-          e.stopPropagation();
-          return;
-        }
+      onClick={() => {
+        if (drag.hasDragged) return;
+
         navigate(`/feed/${feed.fid}`, {
           state: { commentClick: false },
         });
@@ -92,7 +69,7 @@ export default function FeedItem({ detailPage, feed, links }: FeedItemProps) {
 
       {links && <LinkSection links={links} />}
 
-      <FeedActions feed={feed} />
+      <FeedActions feed={feed} onToggleLike={onToggleLike} />
     </div>
   );
 }
@@ -130,6 +107,17 @@ export default function FeedItem({ detailPage, feed, links }: FeedItemProps) {
 //   );
 // }
 
+//   const [report, setReport] = useState();
+
+//   async function fetchReportResult(fid) {
+//     await postApi.post("nova_sub_system/try_report", {
+//       header: header,
+//       body: {
+//         fid: fid,
+//       },
+//     });
+//     //.then((res) => //console.log("rerere", res.data));
+//   }
 // 해시 태그
 function HashTags({ hashtags }: { hashtags: string[] }) {
   if (!hashtags || hashtags.length === 0) {

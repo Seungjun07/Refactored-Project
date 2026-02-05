@@ -1,19 +1,21 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type MouseEvent } from "react";
 
 export default function useDragScroll() {
-  let scrollRef = useRef(null);
+  let scrollRef = useRef<HTMLDivElement>(null);
   let [isDrag, setIsDrag] = useState(false);
-  let [dragStart, setDragStart] = useState("");
+  let [dragStart, setDragStart] = useState(0);
   let [hasDragged, setHasDragged] = useState(false);
 
-  function onMouseDown(e) {
+  function onMouseDown(e: MouseEvent) {
+    if (!scrollRef.current) return;
+
     e.preventDefault();
     setIsDrag(true);
     setDragStart(e.pageX + scrollRef.current.scrollLeft);
     setHasDragged(false);
   }
 
-  function onMouseUp(e) {
+  function onMouseUp(e: MouseEvent) {
     if (hasDragged) {
       e.stopPropagation();
       e.preventDefault();
@@ -21,11 +23,11 @@ export default function useDragScroll() {
     setIsDrag(false);
   }
 
-  function onMouseMove(e) {
-    if (isDrag) {
-      scrollRef.current.scrollLeft = dragStart - e.pageX;
-      setHasDragged(true);
-    }
+  function onMouseMove(e: MouseEvent) {
+    if (!isDrag || !scrollRef.current) return;
+
+    scrollRef.current.scrollLeft = dragStart - e.pageX;
+    setHasDragged(true);
   }
 
   return {

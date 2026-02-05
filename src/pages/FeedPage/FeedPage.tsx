@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import useBiasStore from "../../stores/BiasStore/useBiasStore.js";
@@ -31,26 +31,22 @@ export default function FeedPage() {
 
   const type: FeedType | null = FEED_TYPES.includes(rawType as FeedType)
     ? (rawType as FeedType)
-    : null;
+    : "all";
+
   // 전역 상태 관리
   let { selectedBias } = useBiasStore();
 
   // 드래그 기능
   let [isFilterClicked, setIsFilterClicked] = useState(false);
-  let [isOpendCategory, setIsOpendCategory] = useState(false);
 
-  // let [isLoading, setIsLoading] = useState(true);
-  // let [feedDatas, setFeedData] = useState([]);
   let [nextData, setNextData] = useState(0);
 
   const [isSameTag, setIsSameTag] = useState(true);
-  // let [biasId, setBiasId] = useState();
+  const [tag, setTag] = useState("");
 
   const initialMode =
     brightModeFromUrl || localStorage.getItem("brightMode") || "bright"; // URL에서 가져오고, 없으면 로컬 스토리지에서 가져옴
   const [mode, setMode] = useState(initialMode);
-
-  // const [hasMore, setHasMore] = useState(true);
 
   let [filterCategory, setFilterCategory] = useState(
     JSON.parse(localStorage.getItem("board")) || [""],
@@ -58,16 +54,6 @@ export default function FeedPage() {
   let [filterFclass, setFilterFclass] = useState(
     JSON.parse(localStorage.getItem("content")) || "",
   );
-
-  // let bids = biasList.map((item) => {
-  //   return item.bid;
-  // });
-
-  // useEffect(() => {
-  //   if (bids.length > 0 && !biasId) {
-  //     setBiasId(bids[0]);
-  //   }
-  // }, [bids]);
 
   function onClickApplyButton1() {
     setNextData(-1);
@@ -91,28 +77,14 @@ export default function FeedPage() {
     // setIsLoading(false);
   }
 
-  const {
-    feedData,
-    nextKey,
-    isLoading,
-    hasMore,
-    fetchFeed,
-    setFeedData,
-    fetchFeedWithTag,
-    fetchBiasFeed,
-    resetFeed,
-  } = useFeedData({ type, filterCategory, filterFclass });
-
-  useEffect(() => {
-    if (!type) return;
-    resetFeed();
-
-    if (type === "bias") {
-      fetchBiasFeed(selectedBias?.bid ?? "");
-    } else {
-      fetchFeed();
-    }
-  }, [type, selectedBias]);
+  const { feedData, fetchFeed, toggleLike, isLoading, hasMore } = useFeedData({
+    type,
+    filterCategory,
+    filterFclass,
+    biasId: selectedBias?.bid,
+    board: "",
+    tag,
+  });
 
   // useEffect(() => {
   //   if (isSameTag) {
@@ -123,16 +95,17 @@ export default function FeedPage() {
   // }, [isSameTag]);
 
   function onClickTag(tag: string) {
-    fetchFeedWithTag(tag);
+    setTag(tag);
   }
 
   // 모달 창 - 전체 피드 목록
-  function onClickCategory() {
-    setIsOpendCategory(!isOpendCategory);
-  }
 
   function onClickFilterButton() {
     setIsFilterClicked(!isFilterClicked);
+  }
+
+  function loadMore() {
+    if (!isLoading && hasMore) fetchFeed();
   }
 
   // if (isFilterClicked) {
@@ -145,22 +118,7 @@ export default function FeedPage() {
     <div className={`all-box ${style["all_container"]}`}>
       <div className={`${style["container"]} ${style[getModeClass(mode)]}`}>
         <Header />
-        {type === "bias" && (
-          <BiasFeedSection
-            feedData={feedData}
-            onClickCategory={onClickCategory}
-          />
-
-          //   {biasId && (
-          //     <CategoryModal
-          //       SetIsOpen={setIsOpendCategory}
-          //       onClickCategory={onClickCategory}
-          //       biasId={biasId}
-          //       isOpend={isOpendCategory}
-          //     />
-          //   )}
-          // </div>
-        )}
+        {type === "bias" && <BiasFeedSection feedData={feedData} />}
         {type === "all" && (
           <FeedSearchSection onFilterClick={onClickFilterButton} />
         )}
@@ -169,7 +127,6 @@ export default function FeedPage() {
           <KeywordFeedSection
             type={type}
             onClickTag={onClickTag}
-            fetchFeed={fetchFeed}
             setIsSameTag={setIsSameTag}
           />
         )}
@@ -182,7 +139,12 @@ export default function FeedPage() {
           }
         >
           {feedData.length > 0 ? (
-            <FeedList type={type} feedData={feedData} />
+            <FeedList
+              type={type}
+              feedData={feedData}
+              onLoadMore={loadMore}
+              toggleLike={toggleLike}
+            />
           ) : (
             <NoneFeed />
           )}

@@ -9,39 +9,13 @@ import Header from "@/component/Header/Header.tsx";
 import SearchBox from "@/component/SearchBox.tsx";
 import Banner from "@/component/Banner/Banner.tsx";
 import BiasBoxes from "@/features/bias/components/BiasBoxes";
-import FeedThumbnail from "@/component/feed-list/FeedThumbnail.tsx";
 import AllPost from "@/component/AllPost/AllPost.tsx";
-import NavBar from "@/component/NavBar/NavBar.tsx";
+// import NavBar from "@/component/NavBar/NavBar.tsx";
 import { useHomeFeed } from "@/features/feed/hooks/useHomeFeed.ts";
-
-// export function getModeClass(mode) {
-//   return mode === "dark" ? "dark-mode" : "bright-mode";
-// }
+import FeedThumbnail from "@/features/feed/components/Thumbnail/FeedThumbnail";
 
 export default function HomePage() {
-  const { feeds, biasActions } = useHomeFeed();
-
-  // let bids = biasList.map((item, i) => {
-  //   return item.bid;
-  // });
-  // useEffect(() => {
-  //   if (bids.length > 0 && !biasId) {
-  //     setBiasId(bids[0]);
-  //   }
-  // }, [bids]);
-
-  // const [brightMode, setBrightMode] = useState(() => {
-  //   return localStorage.getItem("brightMode") || "bright"; // 기본값은 'bright'
-  // });
-  // useEffect(() => {
-  //   document.body.className =
-  //     brightMode === "dark" ? "dark-mode" : "bright-mode";
-  // }, [brightMode]);
-
-  // const handleModeChange = (newMode) => {
-  //   setBrightMode(newMode); // MoreSee에서 전달받은 상태 업데이트
-  // };
-
+  const { biasFeeds, todayBestFeed, weeklyBestFeed, allFeed } = useHomeFeed();
   // if (isLoading) {
   //   return <LoadingPage />;
   // }
@@ -62,14 +36,12 @@ export default function HomePage() {
             </>
           }
           img_src={new_pin}
-          feedData={feeds.biasFeed}
+          feedData={biasFeeds}
           type={"bias"}
           endPoint={`/feed?type=bias`}
           customClassName="custom-height"
         >
-          <BiasBoxes
-            fetchBiasCategoryData={biasActions.fetchBiasCategoryData}
-          />
+          <BiasBoxes />
         </FeedThumbnail>
       </div>
 
@@ -81,7 +53,7 @@ export default function HomePage() {
             </>
           }
           img_src={best}
-          feedData={feeds.todayBestFeed}
+          feedData={todayBestFeed}
           endPoint={`/feed?type=today`}
         />
         <FeedThumbnail
@@ -91,19 +63,21 @@ export default function HomePage() {
             </>
           }
           img_src={best}
-          feedData={feeds.weeklyFeed}
+          feedData={weeklyBestFeed}
           endPoint={`/feed?type=weekly`}
         />
 
         <FeedThumbnail
           title={"모든 게시글"}
           img_src={all_post}
-          feedData={feeds.allFeed}
-          allPost={<AllPost allFeed={feeds.allFeed} />}
+          feedData={allFeed}
           endPoint={"/feed?type=all"}
-        />
+          replaceContent
+        >
+          <AllPost feedData={allFeed} />
+        </FeedThumbnail>
       </section>
-      <NavBar></NavBar>
+      {/* <NavBar /> */}
     </div>
   );
 }
