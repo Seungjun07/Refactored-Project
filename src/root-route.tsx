@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import FeedPage from "./pages/FeedPage/FeedPage";
 import FeedDetailPage from "./pages/FeedDetail/FeedDetailPage";
+import LegacyRoutes from "./routes/LegacyRoutes";
 
 export default function RootRoute() {
   return (
@@ -11,6 +12,7 @@ export default function RootRoute() {
       <Route path="/feed/:fid" element={<FeedDetailPage />}></Route>
 
       <Route path="/" element={<HomePage />} />
+      {LegacyRoutes()}
     </Routes>
   );
 }

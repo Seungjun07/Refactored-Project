@@ -2,7 +2,7 @@ body {
   font-family: "Pretendard", sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #111;
+  background-color: gray;
 }
 
 button,
@@ -17,7 +17,7 @@ button {
 
 /* 라이트모드 */
 body.bright-mode {
-  background-color: #131718;
+  background-color: gray;
   color: #000000;
 }
 
