@@ -1,75 +1,27 @@
-import { useEffect, useState } from "react";
-import Board from "./../../Board/Board";
+import Board from "../../../features/board/components/Board/Board";
 import "./index.css";
 import ModalRectangle from "@/img/ModalRectangle.png";
-import mainApi from "../../../services/apis/mainApi";
+import Modal from "@/shared/ui/Modal";
+import { useBoards } from "@/features/board/hooks/useBoards";
 
-export default function CategoryModal({
-  // SetIsOpen,
-  // onClickCategory,
-  biasId,
-  // isOpend,
-}) {
-  let [boardData, setBoardData] = useState([]);
-  let [isLoading, setIsLoading] = useState(true);
-  const [backgroundColor, setBackgroundColor] = useState("");
-
-  // async function fetchBoardData() {
-  //   await mainApi
-  //     .get(`nova_sub_system/try_get_community_side_box?bid=${biasId}`)
-  //     .then((res) => {
-  //       setBoardData(res.data.body);
-  //       setIsLoading(false);
-  //     });
-  // }
-
-  // useEffect(() => {
-  //   if (!isOpend) {
-  //     setBackgroundColor("transparent"); //닫혀있을 때는 배경색 없애기
-  //   } else {
-  //     setTimeout(() => {
-  //       setBackgroundColor("rgba(0, 0, 0, 0.5)"); //일정시간 지난 후에 뒤에 배경색 주기
-  //     }, 500);
-  //   }
-
-  //   return () => {
-  //     clearTimeout();
-  //   };
-  // }, [isOpend]);
-
-  // useEffect(() => {
-  //   fetchBoardData();
-  // }, []);
-
-  // if (isLoading) {
-  //   return null;
-  // }
-
-  // const handleTransitionEnd = (e) => {
-  //   if (!isOpend) {
-  //     setBackgroundColor("transparent"); // 애니메이션 후 배경색을 투명으로 변경
-  //   }
-  // };
+interface CategoryModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+export default function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
+  const { boards } = useBoards();
 
   return (
-    <div
-    // className={`CategoryModal ${isOpend ? "see" : ""}`}
-    // style={{ backgroundColor }}
-    // onClick={() => {
-    //   onClickCategory();
-    // }}
-    // onTransitionEnd={handleTransitionEnd}
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      className="z-50 h-[95%] w-full bg-transparent"
     >
-      <div
-        // className={`modal-container ${isOpend ? "on" : ""}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <section className="top-section">
-          <img src={ModalRectangle} alt="모달 사각형" />
-          <div className="modal-title">주제 이름</div>
-        </section>
-        <Board boardData={boardData} />
-      </div>
-    </div>
+      <section className="top-section">
+        <img src={ModalRectangle} alt="모달 사각형" />
+        <div className="modal-title">주제 이름</div>
+      </section>
+      <Board boards={boards} onClose={onClose} />
+    </Modal>
   );
 }

@@ -4,6 +4,7 @@ import { biasHandlers } from "@/mocks/handelrs/bias.handlers";
 import { exploreHandlers } from "./handelrs/explore.handelrs";
 import { keywordHandlers } from "./handelrs/keyword.handlers";
 import { commentsHandlers } from "./handelrs/comments.handlers";
+import { boardHandlers } from "./handelrs/board.handlers";
 
 export const worker = setupWorker(
   ...handlers,
@@ -11,6 +12,7 @@ export const worker = setupWorker(
   ...commentsHandlers,
   ...exploreHandlers,
   ...keywordHandlers,
+  ...boardHandlers,
 );
 
 worker.start({

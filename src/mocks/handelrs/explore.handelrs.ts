@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/services/apis/mainApi";
 import { http, HttpResponse } from "msw";
+import { getRandomBoard } from "./board.handlers";
 
 const FEED_CLASS = ["short", "long"] as const;
 
@@ -41,13 +42,15 @@ const createRandomFeed = (fid: number) => {
   const bids = ["1", "2", "3"];
   const bid = bids[Math.floor(Math.random() * bids.length)];
 
+  const randomBoard = getRandomBoard();
+
   return {
     fid: `${fid + 1}`,
     body: `this is mock content ${fid + 1}`,
-    bid: `${fid + 1}`,
+    bid,
     nickname: `User-${fid + 1}`,
     date: "2026/01/30",
-    board: "자유게시판",
+    board: randomBoard.name,
     hashtag: [tags[Math.floor(Math.random() * tags.length)]],
     createdAt: new Date().toISOString(),
     star: Math.floor(Math.random() * 50),
@@ -93,27 +96,36 @@ export const exploreHandlers = [
     const hashtag = url.searchParams.get("hashtag");
     const board = url.searchParams.get("board");
 
-    console.log("MSW - GET /feeds", {
-      type,
-      biasId,
-      cursor,
-      limit,
-      fclass,
-      category,
-      time,
-      hashtag,
-      board,
-    });
+    let filteredFeeds = [...mockFeeds];
 
     // bias 필터
-    let filteredFeeds = biasId
-      ? mockFeeds.filter((feed) => feed.bid === biasId)
-      : [...mockFeeds];
+
+    if (biasId || board) {
+      filteredFeeds = filteredFeeds.filter((feed) => {
+        const matchesBias = biasId ? feed.bid === biasId : true;
+        const matchesBoard =
+          board && board !== "모든게시판" ? feed.board === board : true;
+
+        return matchesBias && matchesBoard;
+      });
+    }
+
+    if (category || fclass) {
+      filteredFeeds = filteredFeeds.filter((feed) => {
+        const matchesCategory =
+          category && category !== "" ? feed.board === category : true;
+        const matchesFclass =
+          fclass && fclass !== "" ? feed.fclass === fclass : true;
+
+        return matchesCategory && matchesFclass;
+      });
+    }
 
     // 해시태그 필터
     if (hashtag) {
-      filteredFeeds = mockFeeds.filter((feed) =>
-        feed.hashtag.some((tag) => hashtag?.includes(tag ?? "")),
+      const hashTagList = hashtag.split(",").map((tag) => tag.trim());
+      filteredFeeds = filteredFeeds.filter((feed) =>
+        feed.hashtag.some((tag) => hashTagList.includes(tag)),
       );
     }
 
@@ -148,7 +160,6 @@ export const exploreHandlers = [
   http.get(`${BASE_URL}/feeds/:fid`, ({ params }) => {
     const { fid } = params;
 
-    console.log("MSW detail Feed: ", fid);
     const feed = mockFeeds.find((item) => item.fid === fid);
 
     return HttpResponse.json({
@@ -182,12 +193,6 @@ export const exploreHandlers = [
 
     feed.star = newStar;
     feed.star_flag = newStarFlag;
-
-    console.log(
-      "MSW: updated STAR",
-      { star: feed.star },
-      { star_flag: feed.star_flag },
-    );
 
     return HttpResponse.json({
       body: {
@@ -225,7 +230,6 @@ export const exploreHandlers = [
 
   http.post(`${BASE_URL}/nova_sub_system/image_tag`, async ({ request }) => {
     const body = await request.json();
-    console.log("POST body:", body);
 
     return HttpResponse.json({
       body: {
